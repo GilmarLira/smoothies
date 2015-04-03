@@ -542,16 +542,16 @@ var recipes = [
 
 var itest = [
 	{
-		id: 1,
+		id: 4,
 		group: "greens",
 		type: "green",
-		name: "collard greens",
-		plural: "collard greens",
+		name: "spinach",
+		plural: "spinach",
 		unit: "handfuls",
 		pkg: "bunch",
-		price: 4.00,
+		price: 2.00,
 		price_unit: "bunch",
-		ndbno: "11161",
+		ndbno: "11457",
 		eq: 15
 	}
 ];
@@ -1134,13 +1134,44 @@ var ingredients = [
 // Model
 // ////////////////////////////////////
 
-var recipe = {
-	"nutrients": [],
-	"valid_ndbno": [],
-	"total": [0, 0, 0]
+var smoothies = [];
+var nutrients = [];
+var count = itest.length;
+var lastn = itest[itest.length-1].ndbno;
+// console.log(count);
+
+var Smoothie = function(id) {
+	this.id = id;
+	this.total = [0, 0, 0];
+	this.valid_ndbno = [];
+	this.nutrients = [];
 };
 
-var nutrients = itest.map(function(obj) {
+Smoothie.prototype.addNutrientSet = function(obj) {
+	this.nutrients.push(obj);
+
+	this.total[0] += +obj.calories;
+	this.total[1] += +obj.protein;
+	this.total[2] += +obj.fat;
+};
+
+Smoothie.prototype.addndbno = function(n) {
+	this.valid_ndbno.push(n);
+};
+
+Smoothie.prototype.getTotal = function() {
+	this.valid_ndbno.foreach(function(e) {
+		console.log(e);
+		this.total[0] += +get_nutrition_sheet(e).calories;
+		this.total[1] += +get_nutrition_sheet(e).protein;
+		this.total[2] += +get_nutrition_sheet(e).fat;
+	});
+
+	return this.total;
+};
+
+
+nutrients = itest.map(function(obj, i) {
 	var rObj = {};
 	var ndbno = obj.ndbno;
 
@@ -1162,18 +1193,16 @@ function add_nutrients(ndbno, data) {
 		});
 
 		result[0].nutrients = data;
+
 	}
 }
 
+
 function get_nutrition_sheet(ndbno) {
 	var result = $.grep(nutrients, function(e) { return e.ndbno == ndbno; });
-	return result[0];
+	console.log(result[0].nutrients);
+	return result[0].nutrients;
 }
-
-function get_nutrition_value() {
-
-}
-
 
 
 function food_report(ndbno, callback) {
@@ -1183,42 +1212,25 @@ function food_report(ndbno, callback) {
 	})
 	.done(function(r) {
 		var data = r.report.food.nutrients;
+		var rObj = {};
 
-		callback(ndbno, data);
+		rObj.calories = +data[1].value;
+		rObj.protein = +data[3].value;
+		rObj.fat = +data[4].value;
 
+		callback(ndbno, rObj);
 
-		// var rObj = {};
-		//
-		// rObj.ndbno = r.report.food.ndbno;
-		// rObj.calories = type(r.report.food.nutrients[1].value);
-		// rObj.protein = type(r.report.food.nutrients[3].value);
-		// rObj.fat = type(r.report.food.nutrients[4].value);
-		//
-		// recipe.nutrients.push(rObj);
-		// recipe.total[0] += +rObj.calories;
-		// recipe.total[1] += +rObj.protein;
-		// recipe.total[2] += +rObj.fat;
-		//
-		// if(recipe.nutrients.length == recipe.valid_ndbno.length) {
-		// 	recipe_enter.call(plot_nutrition_graph);
-		// }
+		if(ndbno == lastn) {
+			console.log("last ajax; ready to plot");
+			plot_now();
+		}
 	});
 }
-
 
 
 function type(d) {
   d.value = +d.value; // coerce to number
   return d;
-}
-
-function gram_eq(ing) {
-	// var unit = ingredients[];
-
-	// switch (ing.unit) {
-	// 	case "handfuls":
-	//
-	// }
 }
 
 // View
@@ -1229,11 +1241,16 @@ var list_container = d3.select("body").append("div").attr("class", "list-contain
 var recipe_list = list_container.append("div")
 	.attr("class", "recipes")
 	.selectAll("div")
-	.data(recipes.slice(0, 1));
+	.data(recipes);
 
 var recipe_enter = recipe_list.enter()
 	.append("div")
-	.attr("class", function(d) { return "recipe-" + d.id; });
+	.attr("class", function(d) { return "recipe-" + d.id; })
+	.call(function(d, i) {
+		var asmoothie = new Smoothie(d.id);
+		smoothies.push(asmoothie);
+		console.log("smoothie " + i + " added");
+	});
 
 recipe_enter.append("h2").text(function(d) { return d.name; });
 
@@ -1250,36 +1267,42 @@ recipe_enter.append("ul")
 				.text(function(d) { return d.quantities[j] + " " + current_ingredient.unit + " " + current_ingredient.name; });
 
 			if(current_ingredient.ndbno) {
-				var nutrition_sheet = get_nutrition_sheet(current_ingredient.ndbno);
+				// var nutrition_sheet = get_nutrition_sheet(current_ingredient.ndbno);
 
-				recipe.valid_ndbno.push(current_ingredient.ndbno);
-				recipe.nutrients.push(nutrition_sheet);
-				// food_report(current_ingredient.ndbno);
+				// console.log("current smoothie index is: " + i);
+				// console.log(smoothies[i]);
+
+				smoothies[i].addndbno(current_ingredient.ndbno);
+				// smoothies[i].addNutrientSet(nutrition_sheet);
+
+				// recipe.valid_ndbno.push(current_ingredient.ndbno);
+				// recipe.nutrients.push(nutrition_sheet);
+
+				// recipe.total[0] += +recipe.nutrients.calories;
+				// recipe.total[1] += +recipe.nutrients.protein;
+				// recipe.total[2] += +recipe.nutrients.fat;
 			}
 
 			if(j == d.ingredients.length - 1) {
-				console.log("ready to plot");
+				// console.log("ready to plot");
 				// recipe_enter.call(plot_nutrition_graph);
 			}
 		}
 	});
 
+function plot_now() {
+	plot_nutrition_graph(recipe_enter);
+}
+
 
 function plot_nutrition_graph(selection) {
-	// var total = [0, 0, 0];
-	//
-	// for(var i=0; i<recipe.valid_ndbno.length; i++) {
-	// 	total[0] = recipe.nutrients[i].
-	// }
-
-
 	var nutrient_graph = selection
 		.append("div")
 		.attr("class", "nutrition")
 		.append("svg")
 		.attr("class", "graph")
 		.selectAll("circle")
-		.data(recipe.total);
+		.data(function(d, i) { return smoothies[i].getTotal; });
 
 	var nutrient_enter = nutrient_graph
 		.enter()

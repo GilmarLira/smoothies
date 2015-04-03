@@ -1,13 +1,44 @@
 // Model
 // ////////////////////////////////////
 
-var recipe = {
-	"nutrients": [],
-	"valid_ndbno": [],
-	"total": [0, 0, 0]
+var smoothies = [];
+var nutrients = [];
+var count = itest.length;
+var lastn = itest[itest.length-1].ndbno;
+// console.log(count);
+
+var Smoothie = function(id) {
+	this.id = id;
+	this.total = [0, 0, 0];
+	this.valid_ndbno = [];
+	this.nutrients = [];
 };
 
-var nutrients = itest.map(function(obj) {
+Smoothie.prototype.addNutrientSet = function(obj) {
+	this.nutrients.push(obj);
+
+	this.total[0] += +obj.calories;
+	this.total[1] += +obj.protein;
+	this.total[2] += +obj.fat;
+};
+
+Smoothie.prototype.addndbno = function(n) {
+	this.valid_ndbno.push(n);
+};
+
+Smoothie.prototype.getTotal = function() {
+	this.valid_ndbno.foreach(function(e) {
+		console.log(e);
+		this.total[0] += +get_nutrition_sheet(e).calories;
+		this.total[1] += +get_nutrition_sheet(e).protein;
+		this.total[2] += +get_nutrition_sheet(e).fat;
+	});
+
+	return this.total;
+};
+
+
+nutrients = itest.map(function(obj, i) {
 	var rObj = {};
 	var ndbno = obj.ndbno;
 
@@ -29,18 +60,16 @@ function add_nutrients(ndbno, data) {
 		});
 
 		result[0].nutrients = data;
+
 	}
 }
 
+
 function get_nutrition_sheet(ndbno) {
 	var result = $.grep(nutrients, function(e) { return e.ndbno == ndbno; });
-	return result[0];
+	console.log(result[0].nutrients);
+	return result[0].nutrients;
 }
-
-function get_nutrition_value() {
-
-}
-
 
 
 function food_report(ndbno, callback) {
@@ -50,40 +79,23 @@ function food_report(ndbno, callback) {
 	})
 	.done(function(r) {
 		var data = r.report.food.nutrients;
+		var rObj = {};
 
-		callback(ndbno, data);
+		rObj.calories = +data[1].value;
+		rObj.protein = +data[3].value;
+		rObj.fat = +data[4].value;
 
+		callback(ndbno, rObj);
 
-		// var rObj = {};
-		//
-		// rObj.ndbno = r.report.food.ndbno;
-		// rObj.calories = type(r.report.food.nutrients[1].value);
-		// rObj.protein = type(r.report.food.nutrients[3].value);
-		// rObj.fat = type(r.report.food.nutrients[4].value);
-		//
-		// recipe.nutrients.push(rObj);
-		// recipe.total[0] += +rObj.calories;
-		// recipe.total[1] += +rObj.protein;
-		// recipe.total[2] += +rObj.fat;
-		//
-		// if(recipe.nutrients.length == recipe.valid_ndbno.length) {
-		// 	recipe_enter.call(plot_nutrition_graph);
-		// }
+		if(ndbno == lastn) {
+			console.log("last ajax; ready to plot");
+			plot_now();
+		}
 	});
 }
-
 
 
 function type(d) {
   d.value = +d.value; // coerce to number
   return d;
-}
-
-function gram_eq(ing) {
-	// var unit = ingredients[];
-
-	// switch (ing.unit) {
-	// 	case "handfuls":
-	//
-	// }
 }

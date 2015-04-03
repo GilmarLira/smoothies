@@ -6,11 +6,16 @@ var list_container = d3.select("body").append("div").attr("class", "list-contain
 var recipe_list = list_container.append("div")
 	.attr("class", "recipes")
 	.selectAll("div")
-	.data(recipes.slice(0, 1));
+	.data(recipes);
 
 var recipe_enter = recipe_list.enter()
 	.append("div")
-	.attr("class", function(d) { return "recipe-" + d.id; });
+	.attr("class", function(d) { return "recipe-" + d.id; })
+	.call(function(d, i) {
+		var asmoothie = new Smoothie(d.id);
+		smoothies.push(asmoothie);
+		console.log("smoothie " + i + " added");
+	});
 
 recipe_enter.append("h2").text(function(d) { return d.name; });
 
@@ -27,36 +32,42 @@ recipe_enter.append("ul")
 				.text(function(d) { return d.quantities[j] + " " + current_ingredient.unit + " " + current_ingredient.name; });
 
 			if(current_ingredient.ndbno) {
-				var nutrition_sheet = get_nutrition_sheet(current_ingredient.ndbno);
+				// var nutrition_sheet = get_nutrition_sheet(current_ingredient.ndbno);
 
-				recipe.valid_ndbno.push(current_ingredient.ndbno);
-				recipe.nutrients.push(nutrition_sheet);
-				// food_report(current_ingredient.ndbno);
+				// console.log("current smoothie index is: " + i);
+				// console.log(smoothies[i]);
+
+				smoothies[i].addndbno(current_ingredient.ndbno);
+				// smoothies[i].addNutrientSet(nutrition_sheet);
+
+				// recipe.valid_ndbno.push(current_ingredient.ndbno);
+				// recipe.nutrients.push(nutrition_sheet);
+
+				// recipe.total[0] += +recipe.nutrients.calories;
+				// recipe.total[1] += +recipe.nutrients.protein;
+				// recipe.total[2] += +recipe.nutrients.fat;
 			}
 
 			if(j == d.ingredients.length - 1) {
-				console.log("ready to plot");
+				// console.log("ready to plot");
 				// recipe_enter.call(plot_nutrition_graph);
 			}
 		}
 	});
 
+function plot_now() {
+	plot_nutrition_graph(recipe_enter);
+}
+
 
 function plot_nutrition_graph(selection) {
-	// var total = [0, 0, 0];
-	//
-	// for(var i=0; i<recipe.valid_ndbno.length; i++) {
-	// 	total[0] = recipe.nutrients[i].
-	// }
-
-
 	var nutrient_graph = selection
 		.append("div")
 		.attr("class", "nutrition")
 		.append("svg")
 		.attr("class", "graph")
 		.selectAll("circle")
-		.data(recipe.total);
+		.data(function(d, i) { return smoothies[i].getTotal; });
 
 	var nutrient_enter = nutrient_graph
 		.enter()

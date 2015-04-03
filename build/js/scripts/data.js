@@ -542,16 +542,16 @@ var recipes = [
 
 var itest = [
 	{
-		id: 1,
+		id: 4,
 		group: "greens",
 		type: "green",
-		name: "collard greens",
-		plural: "collard greens",
+		name: "spinach",
+		plural: "spinach",
 		unit: "handfuls",
 		pkg: "bunch",
-		price: 4.00,
+		price: 2.00,
 		price_unit: "bunch",
-		ndbno: "11161",
+		ndbno: "11457",
 		eq: 15
 	}
 ];
