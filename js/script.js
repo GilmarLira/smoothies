@@ -1,3 +1,52 @@
+var Smoothie = function(id) {
+	var r = get_recipe_by_id(id);
+
+	this.id = id;
+	this.phase = r.phase,
+	this.name = r.name,
+	this.description = r.description,
+	this.ingredients = r.ingredients,
+	this.quantities = r.quantities,
+	this.total = [0, 0, 0];
+	this.valid_ndbno = [];
+
+	var this_smoothie = this;
+
+	r.ingredients.forEach(function(id) {
+		var ing = get_ingredient_by_id(id);
+		if(ing.ndbno) {
+			this_smoothie.valid_ndbno.push(ing.ndbno);
+		}
+		return false;
+	});
+
+	// this.nutrients = [];
+};
+
+
+Smoothie.prototype.addNutrientSet = function(obj) {
+	this.nutrients.push(obj);
+	this.total[0] += +obj.calories;
+	this.total[1] += +obj.protein;
+	this.total[2] += +obj.fat;
+};
+
+Smoothie.prototype.addndbno = function(n) {
+	this.valid_ndbno.push(n);
+};
+
+Smoothie.prototype.getTotal = function() {
+	var total = [0, 0, 0];
+	this.valid_ndbno.forEach(function(n) {
+		var nutri = get_nutrition_sheet(n);
+
+		total[0] += +nutri.calories;
+		total[1] += +nutri.protein;
+		total[2] += +nutri.fat;
+	});
+	return total;
+};
+
 var recipes = [
 	{
 		id: 1,
@@ -553,6 +602,18 @@ var itest = [
 		price_unit: "bunch",
 		ndbno: "11457",
 		eq: 15
+	},
+	{
+		id: 9,
+		group: "fruits",
+		type: "fruit",
+		name: "banana",
+		plural: "bananas",
+		unit: "",
+		pkg: "bunch",
+		price: 2.00,
+		price_unit: "lb",
+		ndbno: "09040"
 	}
 ];
 
@@ -1136,42 +1197,27 @@ var ingredients = [
 
 var smoothies = [];
 var nutrients = [];
-var count = itest.length;
-var lastn = itest[itest.length-1].ndbno;
-// console.log(count);
+var count = ingredients.length;
+var lastn = ingredients[ingredients.length-1].ndbno;
 
-var Smoothie = function(id) {
-	this.id = id;
-	this.total = [0, 0, 0];
-	this.valid_ndbno = [];
-	this.nutrients = [];
-};
 
-Smoothie.prototype.addNutrientSet = function(obj) {
-	this.nutrients.push(obj);
-
-	this.total[0] += +obj.calories;
-	this.total[1] += +obj.protein;
-	this.total[2] += +obj.fat;
-};
-
-Smoothie.prototype.addndbno = function(n) {
-	this.valid_ndbno.push(n);
-};
-
-Smoothie.prototype.getTotal = function() {
-	this.valid_ndbno.foreach(function(e) {
-		console.log(e);
-		this.total[0] += +get_nutrition_sheet(e).calories;
-		this.total[1] += +get_nutrition_sheet(e).protein;
-		this.total[2] += +get_nutrition_sheet(e).fat;
+function get_recipe_by_id(id) {
+	var r = $.grep(recipes, function(e) {
+		return e.id == id;
 	});
+	return r[0];
+}
 
-	return this.total;
-};
+function get_ingredient_by_id(id) {
+	var i = $.grep(ingredients, function(ing) {
+		return ing.id == id;
+	});
+	return i[0];
+}
 
+smoothies = recipes.map(function(r) { return new Smoothie(r.id); });
 
-nutrients = itest.map(function(obj, i) {
+nutrients = ingredients.map(function(obj) {
 	var rObj = {};
 	var ndbno = obj.ndbno;
 
@@ -1194,13 +1240,32 @@ function add_nutrients(ndbno, data) {
 
 		result[0].nutrients = data;
 
+		if(ndbno == lastn) {
+			get_totals();
+		}
 	}
+}
+
+
+function get_totals() {
+	smoothies.forEach(function(e) {
+		e.valid_ndbno.forEach(function(n) {
+			if(n) {
+				var nutri = get_nutrition_sheet(n);
+
+				e.total[0] += +nutri.calories;
+				e.total[1] += +nutri.protein;
+				e.total[2] += +nutri.fat;
+			}
+		});
+	});
+
+	list_smoothies();
 }
 
 
 function get_nutrition_sheet(ndbno) {
 	var result = $.grep(nutrients, function(e) { return e.ndbno == ndbno; });
-	console.log(result[0].nutrients);
 	return result[0].nutrients;
 }
 
@@ -1219,76 +1284,64 @@ function food_report(ndbno, callback) {
 		rObj.fat = +data[4].value;
 
 		callback(ndbno, rObj);
-
-		if(ndbno == lastn) {
-			console.log("last ajax; ready to plot");
-			plot_now();
-		}
 	});
-}
-
-
-function type(d) {
-  d.value = +d.value; // coerce to number
-  return d;
 }
 
 // View
 // ////////////////////////////////////
 
-var list_container = d3.select("body").append("div").attr("class", "list-container");
+function list_smoothies() {
+	var list_container = d3.select("body").append("div").attr("class", "list-container");
 
-var recipe_list = list_container.append("div")
-	.attr("class", "recipes")
-	.selectAll("div")
-	.data(recipes);
+	var recipe_list = list_container.append("div")
+		.attr("class", "recipes")
+		.selectAll("div")
+		.data(smoothies);
 
-var recipe_enter = recipe_list.enter()
-	.append("div")
-	.attr("class", function(d) { return "recipe-" + d.id; })
-	.call(function(d, i) {
-		var asmoothie = new Smoothie(d.id);
-		smoothies.push(asmoothie);
-		console.log("smoothie " + i + " added");
-	});
+	var recipe_enter = recipe_list.enter()
+		.append("div")
+		.attr("class", function(d) { return "recipe-" + d.id; });
 
-recipe_enter.append("h2").text(function(d) { return d.name; });
+	recipe_enter.append("h2").text(function(d) { return d.name; });
+	recipe_enter.append("p").text(function(d) { return d.description; });
 
-recipe_enter.append("p").text(function(d) { return d.description; });
+	recipe_enter.append("ul")
+		.attr("class", "ingredients")
+		.each(function(d, i) {
+			for(var j = 0; j < d.ingredients.length; j++) {
+				var current_ingredient = ingredients[d.ingredients[j]];
 
-recipe_enter.append("ul")
-	.attr("class", "ingredients")
-	.each(function(d, i) {
-		for(var j = 0; j < d.ingredients.length; j++) {
-			var current_ingredient = ingredients[d.ingredients[j]];
-
-			d3.select(this).append("li")
-				.attr("class", function(d) { return current_ingredient.group; })
-				.text(function(d) { return d.quantities[j] + " " + current_ingredient.unit + " " + current_ingredient.name; });
-
-			if(current_ingredient.ndbno) {
-				// var nutrition_sheet = get_nutrition_sheet(current_ingredient.ndbno);
-
-				// console.log("current smoothie index is: " + i);
-				// console.log(smoothies[i]);
-
-				smoothies[i].addndbno(current_ingredient.ndbno);
-				// smoothies[i].addNutrientSet(nutrition_sheet);
-
-				// recipe.valid_ndbno.push(current_ingredient.ndbno);
-				// recipe.nutrients.push(nutrition_sheet);
-
-				// recipe.total[0] += +recipe.nutrients.calories;
-				// recipe.total[1] += +recipe.nutrients.protein;
-				// recipe.total[2] += +recipe.nutrients.fat;
+				d3.select(this).append("li")
+					.attr("class", function(d) { return current_ingredient.group; })
+					.text(function(d) { return d.quantities[j] + " " + current_ingredient.unit + " " + current_ingredient.name; });
 			}
+		});
 
-			if(j == d.ingredients.length - 1) {
-				// console.log("ready to plot");
-				// recipe_enter.call(plot_nutrition_graph);
+	recipe_enter.append("div")
+		.attr("class", "nutrition")
+		.append("svg")
+		.attr("class", "graph")
+		.each(function(d, i) {
+			var graph = d3.select(this);
+			for(var j = 0; j < d.total.length; j++) {
+			var graph_enter = graph.append("g");
+				graph_enter
+					.append("circle")
+					.attr("r", 50)
+					.attr("cy", 75)
+					.attr("cx", 50 + j*150);
+
+				graph_enter
+					.append("text")
+					.attr("y", 90)
+					.attr("x", 50 + j*150)
+					.text(Math.round(d.total[j] * 100) / 100);
 			}
-		}
-	});
+		});
+
+
+}
+
 
 function plot_now() {
 	plot_nutrition_graph(recipe_enter);
@@ -1296,19 +1349,18 @@ function plot_now() {
 
 
 function plot_nutrition_graph(selection) {
-	var nutrient_graph = selection
+var nutri_chart = smoothies.map(function(s) {
+	return s.nutrients;
+});
+
+	var nutrient_enter = selection
 		.append("div")
 		.attr("class", "nutrition")
 		.append("svg")
-		.attr("class", "graph")
-		.selectAll("circle")
-		.data(function(d, i) { return smoothies[i].getTotal; });
-
-	var nutrient_enter = nutrient_graph
-		.enter()
-		.append("g");
+		.attr("class", "graph");
 
 	nutrient_enter
+		.append("g")
 		.append("circle")
 		.attr("r", 50)
 		.attr("cy", 75)
@@ -1318,7 +1370,26 @@ function plot_nutrition_graph(selection) {
 		.append("text")
 		.attr("y", 80)
 		.attr("x", function(d, i) { return 50 + i*150; })
-		.text(function(d) { return d; });
+		.text(function(d, i) {
+
+		});
+	// var nutrient_enter = nutrient_graph
+	// 	.enter()
+	//
+
+	// nutrient_enter
+	// 	.append("circle")
+	// 	.attr("r", 50)
+	// 	.attr("cy", 75)
+	// 	.attr("cx", function(d, i) { return 50 + i*150; });
+	//
+	// nutrient_enter
+	// 	.append("text")
+	// 	.attr("y", 80)
+	// 	.attr("x", function(d, i) { return 50 + i*150; })
+	// 	.text(function(d) {
+	// 		d.getTotal
+	// 	});
 
 		// var nutrient_table = selection
 		// 	.append("table")
