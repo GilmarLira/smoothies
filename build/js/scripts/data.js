@@ -553,6 +553,18 @@ var itest = [
 		price_unit: "bunch",
 		ndbno: "11457",
 		eq: 15
+	},
+	{
+		id: 9,
+		group: "fruits",
+		type: "fruit",
+		name: "banana",
+		plural: "bananas",
+		unit: "",
+		pkg: "bunch",
+		price: 2.00,
+		price_unit: "lb",
+		ndbno: "09040"
 	}
 ];
 
