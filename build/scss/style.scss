@@ -16,8 +16,8 @@
 // Globals
 // ////////////////////////////////////////////////////
 @import 'globals/reset';
-@import 'globals/mixins';
 @import 'globals/color';
+@import 'globals/mixins';
 @import 'globals/typography';
 // @import 'globals/forms';
 // @import 'globals/links';
@@ -25,4 +25,6 @@
 
 // Partials
 // ////////////////////////////////////////////////////
-@import 'partials/main';
+@import 'partials/layout';
+@import 'partials/menu';
+@import 'partials/recipes';

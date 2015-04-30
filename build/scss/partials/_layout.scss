@@ -1,0 +1,41 @@
+
+// layout
+// ////////////////////////////////////
+
+// * { @include outline(purple); }
+
+html { height: 100%; }
+body { height: 100%; }
+
+a,
+a:visited,
+a:active { color: $color-text; }
+
+.bar {
+  @include outer-container;
+  @include margins(0, 1);
+  padding: 1rem;
+
+  .title {
+    @include rhythm(1);
+    font-weight: bold;
+
+    &:hover { cursor: pointer; } }
+}
+
+.container {
+  @include outer-container;
+  @include position;
+  height: 100%;
+
+  > section {
+    @include fill-parent;
+    @include position(absolute);
+    @include transition(all .8s ease);
+
+    // &:not(:first-child) { @include transform(translateX(100%)); }
+    &:not(:first-child) { display: none; }
+    // &.selected { @include transform(translateX(0%)); }
+    &.selected { display: block; }
+  }
+}

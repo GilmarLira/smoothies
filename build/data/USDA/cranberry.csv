@@ -1,0 +1,42 @@
+Source: USDA National Nutrient Database for Standard Reference 27 Software v.2.2.4
+Basic Report
+Report Run at: April 04, 2015 18:30 EDT
+"Nutrient data for: 09078, Cranberries, raw"
+Nutrient,Unit,1Value per 100 g,"1 cup, chopped = 110.0g","1 cup, whole = 100.0g",
+Proximates
+"Water",g,87.13,95.84,87.13
+"Energy",kcal,46,51,46
+"Protein",g,0.39,0.43,0.39
+"Total lipid (fat)",g,0.13,0.14,0.13
+"Carbohydrate, by difference",g,12.20,13.42,12.20
+"Fiber, total dietary",g,4.6,5.1,4.6
+"Sugars, total",g,4.04,4.44,4.04
+Minerals
+"Calcium, Ca",mg,8,9,8
+"Iron, Fe",mg,0.25,0.28,0.25
+"Magnesium, Mg",mg,6,7,6
+"Phosphorus, P",mg,13,14,13
+"Potassium, K",mg,85,94,85
+"Sodium, Na",mg,2,2,2
+"Zinc, Zn",mg,0.10,0.11,0.10
+Vitamins
+"Vitamin C, total ascorbic acid",mg,13.3,14.6,13.3
+"Thiamin",mg,0.012,0.013,0.012
+"Riboflavin",mg,0.020,0.022,0.020
+"Niacin",mg,0.101,0.111,0.101
+"Vitamin B-6",mg,0.057,0.063,0.057
+"Folate, DFE",µg,1,1,1
+"Vitamin B-12",µg,0.00,0.00,0.00
+"Vitamin A, RAE",µg,3,3,3
+"Vitamin A, IU",IU,60,66,60
+"Vitamin E (alpha-tocopherol)",mg,1.20,1.32,1.20
+"Vitamin D (D2 + D3)",µg,0.0,0.0,0.0
+"Vitamin D",IU,0,0,0
+"Vitamin K (phylloquinone)",µg,5.1,5.6,5.1
+Lipids
+"Fatty acids, total saturated",g,0.011,0.012,0.011
+"Fatty acids, total monounsaturated",g,0.018,0.020,0.018
+"Fatty acids, total polyunsaturated",g,0.055,0.060,0.055
+"Cholesterol",mg,0,0,0
+Other
+"Caffeine",mg,0,0,0

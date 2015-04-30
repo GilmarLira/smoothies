@@ -6,7 +6,7 @@
 $fontfamily-helv: 'Helvetica', sans-serif;
 
 $body-font-size: 16px;
-$body-line-height: 1.2;
+$body-line-height: 2;
 $scale-factor: 1.6; // http://modularscale.com/
 
 @mixin typeface-helv { font-family: $fontfamily-helv; }
@@ -15,28 +15,25 @@ body {
   @include typeface-helv;
   @include rhythm(0);
   color: $color-text;
+  font-weight: 100;
 }
 
 h1,
 .alpha {
   @include rhythm(3, 0, 1);
   line-height: .8;
-  // @include media($medium) { @include rhythm(2, 0, .5); }
 }
 
 h2,
 .beta {
-  @include rhythm(1, 1, 1);
-	font-weight: bold;
-  line-height: .8;
-  // @include media($medium) { @include rhythm(1, 0, .5); }
+  @include rhythm(1, 0, 1);
+  font-weight: bold;
 }
 
 h3,
 .gamma {
   @include rhythm(1, 0, 1);
   line-height: .9;
-  // @include media($medium) { @include rhythm(0, 0, .5); }
 }
 
 h4,
@@ -60,7 +57,5 @@ h6,
 p,
 ul,
 ol {
-  @include rhythm(0, 0, 1);
-  // @include media($medium) { @include rhythm(1, 0, .5); }
-  // @include media($small) { @include rhythm(0, 0, .5); }
+  @include rhythm(1, 0, 1);
 }

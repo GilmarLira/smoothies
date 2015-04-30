@@ -50,6 +50,7 @@ module.exports = function(grunt) {
           livereload: false
         },
         files: [
+          'build/scss/*.scss',
           'build/scss/globals/*.scss',
           'build/scss/partials/*.scss',
         ],

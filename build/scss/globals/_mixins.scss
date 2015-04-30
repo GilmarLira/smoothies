@@ -1,53 +1,59 @@
+
 // Helper Mixins
 // ////////////////////////////////////////////////////
 
-@mixin outline($color: #800080) {
-  * { outline: 1px solid $color; }
+@function lines($lines) { @return $lines * $body-font-size * $body-line-height; }
+
+@mixin outline($color: #800080) { outline: 1px solid $color; }
+
+@mixin top-bar($color: $color-text, $height: .5rem) {
+  &::before {
+    background: $color;
+    content: ' ';
+    display: block;
+    height: $height;
+  }
 }
 
-@function lines($lines) {
-  @return $lines * $body-font-size * $body-line-height;
+%top-border {
+  border-top: .25rem solid $color-text;
+  @include border-image(linear-gradient(left, #5a076a, #f13b04) 20 stretch);
+}
+
+@mixin top-border($color: $color-text) {
+  @extend %top-border;
+  border-color: $color;
+}
+
+%gradient-clip {
+  @include linear-gradient(#5a076a, #f13b04);
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
 }
 
 
-/* ==========================================================================
-
-   Buttons
-
-   ========================================================================== */
-@mixin button( $color: $color-text, $radius: 3px ){
-	display:inline-block;
-	cursor:pointer;
-	padding: 0.5em 1em;
-	color: $color;
-	background-color: rgba(white,.1);
-	border-radius: $radius;
-	box-shadow: 0 0 0 1px rgba(black,.3);
+// Buttons
+// ////////////////////////////////////////////////////
+@mixin button($color: $color-text, $radius: 3px) {
+  cursor: pointer;
+  display: inline-block;
+  padding: .5em 1em;
+  color: $color;
+  background-color: rgba(#fff, .1);
+  border-radius: $radius;
+  box-shadow: 0 0 0 1px rgba(#000, .3);
   opacity: .5;
-	@include typeface-montserrat;
-	&:after {
-		content: '';
-
-	}
-	&:hover{
-    opacity: 1;
-	}
-	@include margins($before: 1, $after: 1);
+  @include typeface-montserrat;
+  @include margins($before: 1, $after: 1);
+  &:after { content: ''; }
+  &:hover { opacity: 1; }
 }
 
 
 
-
-
-
-
-/* ==========================================================================
-
-   Vertical Rhythm and Modular Scale with Baseline Grid by Justin Metros
-   // inspired by www.gridlover.net
-
-   ========================================================================== */
-
+// Vertical Rhythm and Modular Scale with Baseline Grid by Justin Metros
+// inspired by www.gridlover.net
+// ////////////////////////////////////////////////////
 
 // Sass Exponent Mixin
 @function exponent($base, $exponent) {
@@ -71,8 +77,7 @@
   @if $scale == 0 and $before == 0 and $after == 0 {
     font-size: $body-font-size;
     line-height: $body-font-size * $body-line-height;
-  }
-  @else {
+  }@else {
     @if $scale == 0 {
       font-size: $body-font-size;
       line-height: $body-font-size * $body-line-height;
@@ -82,21 +87,21 @@
       font-size: $new-font-size;
       line-height: ceil($new-font-size / ($body-line-height * $body-font-size)) * $body-line-height * $body-font-size;
     }
-    margin-top: $body-font-size * $body-line-height * $before;
     margin-bottom: $body-font-size * $body-line-height * $after;
+    margin-top: $body-font-size * $body-line-height * $before;
   }
 }
 
 
 // Rhythm Mixin. Margins Only.
 @mixin margins($before: 0, $after: 0) {
-  margin-top: $body-font-size * $body-line-height * $before;
   margin-bottom: $body-font-size * $body-line-height * $after;
+  margin-top: $body-font-size * $body-line-height * $before;
 }
 
 
 // Rhythm Mixin. Padding Only.
 @mixin paddings($before: 0, $after: 0) {
-  padding-top: $body-font-size * $body-line-height * $before;
   padding-bottom: $body-font-size * $body-line-height * $after;
+  padding-top: $body-font-size * $body-line-height * $before;
 }
