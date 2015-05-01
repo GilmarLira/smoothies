@@ -25,11 +25,19 @@
   border-color: $color;
 }
 
-%gradient-clip {
-  @include linear-gradient(#5a076a, #f13b04);
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+
+%gradient { @include linear-gradient(#5a076a, #f13b04); }
+
+%clip {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
+%gradient-clip {
+  @extend %gradient;
+  @extend %clip;
+}
+
 
 
 // Buttons

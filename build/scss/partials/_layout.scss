@@ -5,7 +5,10 @@
 // * { @include outline(purple); }
 
 html { height: 100%; }
-body { height: 100%; }
+body {
+  height: 100%;
+  margin: 0 1rem;
+}
 
 a,
 a:visited,
@@ -14,7 +17,7 @@ a:active { color: $color-text; }
 .bar {
   @include outer-container;
   @include margins(0, 1);
-  padding: 1rem;
+  padding: 1rem 0;
 
   .title {
     @include rhythm(1);
@@ -28,14 +31,30 @@ a:active { color: $color-text; }
   @include position;
   height: 100%;
 
-  > section {
-    @include fill-parent;
-    @include position(absolute);
-    @include transition(all .8s ease);
+  .list-view {
+    @include position;
+    @include clearfix;
+    height: 100%;
 
-    // &:not(:first-child) { @include transform(translateX(100%)); }
-    &:not(:first-child) { display: none; }
-    // &.selected { @include transform(translateX(0%)); }
-    &.selected { display: block; }
+    .cell {
+      @include position(absolute);
+      @include fill-parent;
+      height: lines(2);
+      overflow: hidden;
+
+      &.enter { left: 100%; opacity: 0; }
+    }
   }
+
+  // > section {
+  //   @include fill-parent;
+  //   @include position(absolute);
+  //   @include transition(all .8s ease);
+  //
+  //   // &:not(:first-child) { @include transform(translateX(100%)); }
+  //   &:not(:first-child) { display: none; }
+  //   // &.selected { @include transform(translateX(0%)); }
+  //   &.selected { display: block; }
+  // }
+
 }

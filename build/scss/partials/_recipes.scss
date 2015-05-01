@@ -2,35 +2,19 @@
 // recipes
 // ////////////////////////////////////
 
-.recipes-container {
-  // @include position;
-  background: $color-background;
-
-  .recipe {
+.recipes {
+  .cell {
     @extend %top-border;
     @extend %gradient-clip;
-    @include position;
-    @include transform(translateZ(0));
-    @include transition(height .8s ease);
-    @include user-select(none);
-    height: 64px;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    // overflow: hidden;
-
-    &.selected { height: 426px; }
-
-    .controls { @include position(absolute, 0 1rem null null); }
 
     .title,
-    .description,
-    .ingredients { -webkit-background-clip: text; }
+    .description { @extend %clip; }
 
-    // .description,
-    // .ingredients { visibility: hidden; }
-
-    .title:hover { cursor: pointer; }
-    .quantity { font-weight: bold; }
+    .quantity,
     .unit { font-weight: bold; }
+
+    &.selected {
+      height: lines(8);
+    }
   }
 }

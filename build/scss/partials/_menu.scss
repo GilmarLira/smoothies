@@ -1,16 +1,12 @@
 
-// main
+// menu
 // ////////////////////////////////////
 
-.main {
-  @extend %gradient-clip;
+.menu {
+  // @extend %gradient-clip;
 
-  .menu li {
+  .cell {
     @extend %top-border;
-    @include rhythm(1, 0, 1);
-
-    font-weight: bold;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    @extend %gradient-clip;
   }
 }
