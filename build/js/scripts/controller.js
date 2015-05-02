@@ -5,18 +5,18 @@
 var recipes,
 	ingredients,
 	recipe_ingredients,
-	favorites = [];
+	favorites;
 
-var dur = 800;
+var dur = 1000;
 
 
 $(document).ready(init);
 
 
 function init() {
-	$(".bar .title").click(function() {
-		list_menu();
-	});
+	favorites = new Favorites();
+
+	$(".bar .title").click(list_menu);
 
 	d3.csv("js/recipes.csv", function(csv) { csv.forEach(function(d) { d.recipe_id = +d.recipe_id; }); recipes = csv; });
 	d3.csv("js/ingredients.csv", function(csv) {
@@ -39,7 +39,7 @@ function list_menu() {
 	var menu_data = ["Recipes", "Favorites", "Plans", "Ingredients"];
 	var menu = d3.select(".list-view")
 		.attr("class", "list-view menu")
-		.selectAll("div")
+		.selectAll(".cell")
 		.data(menu_data, function(d) { return d; });
 
 
@@ -53,8 +53,8 @@ function list_menu() {
 	var menu_enter = menu.enter()
 		.append("div")
 			.attr("class", "cell enter")
-			.style("top", function(d, i) { return i * lines(2) + "px"; })
-			.classed("enter", true);
+			.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * lines(2) + "px)"; });
+
 
 	menu_enter
 		.append("h2")
@@ -65,7 +65,9 @@ function list_menu() {
 				.text(function(d) { return d; });
 
 	// MENU UPDATE
-	menu_enter.transition().call(enter_transition);
+	menu_enter
+		.transition()
+			.call(enter_transition);
 
 
 	$(".menu a").click(function() {
@@ -85,7 +87,7 @@ function list_menu() {
 function list_recipes(list) {
 	var recipes_list = d3.select(".list-view")
 		.attr("class", "list-view recipes")
-		.selectAll("div")
+		.selectAll(".cell")
 		.data(list, function(d) { return d.recipe_id; });
 
 	// EXIT
@@ -122,14 +124,14 @@ function list_recipes(list) {
 		.append("input")
 			.attr("type", "checkbox")
 			.attr("class", "favorite-check")
-			.property("checked", function(d) { return (is_favorite(d.recipe_id)); })
+			.property("checked", function(d) { return (favorites.hasRecipe(d.recipe_id)); })
 			.on("change", update_favorites);
 
 	// UPDATE
 	recipes_list
 		.order()
-		.style("top", function(d, i) { return i * lines(2) + "px"; })
-		.classed("favorite", function(d) { return (is_favorite(d.recipe_id)); })
+		.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * lines(2) + "px)"; })
+		.classed("favorite", function(d) { return (favorites.hasRecipe(d.recipe_id)); })
 		.transition()
 			.call(enter_transition);
 
@@ -169,32 +171,40 @@ function list_ingredients() {
 
 function enter_transition(transition) {
 	transition
-		// .each("start", function(d, i) { d3.select(this).style("height", lines(2)); })
 		.duration(dur)
-		.delay(function(d, i) { return i/transition.size() * dur; })
-		.style("left", "0%")
+		.delay(function(d, i) { return (i+1)/transition.size() * dur; })
+		.styleTween("-webkit-transform", function (d, i) {
+			var startTranslateState = "translate(100%, " + i * lines(2) + "px)";
+			var endTranslateState = "translate(0%, " + i * lines(2) + "px)";
+			var translateInterpolator = d3.interpolateString(startTranslateState, endTranslateState);
+    	return translateInterpolator;
+    })
 		.style("opacity", 1);
 }
 
 
 function exit_transition(transition) {
 	transition
-		// .each("start", function(d, i) { d3.select(this).style("height", lines(2)); })
-		.duration(dur)
-		.delay(function(d, i) { return i/transition.size() * dur/4; })
-		.style("left", "-100%")
+		.duration(dur/2)
+		.delay(function(d, i) { return i/transition.size() * dur/2; })
+		.styleTween("-webkit-transform", function (d, i) {
+			var startTranslateState = "translate(0%, " + i * lines(2) + "px)";
+			var endTranslateState = "translate(-100%, " + i * lines(2) + "px)";
+			var translateInterpolator = d3.interpolateString(startTranslateState, endTranslateState);
+    	return translateInterpolator;
+    })
 		.style("opacity", 1e-6)
-	.remove();
+		.remove();
 }
 
 
 function list_favorites() {
-	var favorite_recipes = [];
-	favorites.forEach(
-		function(f) { favorite_recipes.push(find_recipe_id(f)[0]); }
+	var fav_recipes = [];
+	favorites.getRecipes().forEach(
+		function(f) { fav_recipes.push(find_recipe_id(f)[0]); }
 	);
 
-	list_recipes(favorite_recipes);
+	list_recipes(fav_recipes);
 }
 
 
@@ -239,39 +249,10 @@ function toggle_recipe(r, i) {
 			}, dur/2);
 }
 
-
-function lines(n) {
-	var line_height = parseInt($("body").css("line-height"));
-	return n * line_height;
-}
-
-
 function update_favorites(d) {
 	if(this.checked) {
-		add_favorite(d.recipe_id);
+		favorites.addRecipe(d.recipe_id);
 	} else {
-		remove_favorite(d.recipe_id);
+		favorites.removeRecipe(d.recipe_id);
 	}
 }
-
-function add_favorite(id) {
-	favorites.push(id);
-}
-
-function remove_favorite(id) {
-	favorites.splice(get_favorite(id), 1);
-}
-
-function get_favorite(id) {
-	return $.inArray(id, favorites);
-}
-
-function is_favorite(id) {
-	return (get_favorite(id) == -1) ? false : true;
-}
-
-
-
-
-
-///End

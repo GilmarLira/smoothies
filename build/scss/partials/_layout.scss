@@ -34,18 +34,18 @@ a:active { color: $color-text; }
   .list-view {
     @include position;
     @include span-columns(16 of 16);
-    // @include clearfix;
     height: 100%;
 
     .cell {
+      @extend %top-border;
+      @extend %gradient-clip;
       @include position(absolute);
       @include span-columns(16 of 16);
       @include transform(translate3d(0, 0, 0));
-      @include transition(background 1s);
       height: lines(2);
-      overflow: hidden;
+      // overflow: hidden;
 
-      &.enter { left: 100%; opacity: 0; }
+      &.enter { opacity: 0; }
 
       &:hover,
       &:active,

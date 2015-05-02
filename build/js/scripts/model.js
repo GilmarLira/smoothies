@@ -1,5 +1,15 @@
 // // Model
 // // ////////////////////////////////////
+
+var line_height;
+
+function lines(n) {
+	if(!line_height) { line_height = parseInt($("body").css("line-height")); }
+	return n * line_height;
+}
+
+
+
 //
 // var smoothies = [];
 // var nutrients = [];
