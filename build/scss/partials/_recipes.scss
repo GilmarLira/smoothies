@@ -4,8 +4,8 @@
 
 .recipes {
   .cell {
-    .title { @extend %clip; @include user-select(none); cursor: pointer; }
-    .description { @extend %clip; }
+    .title { @include user-select(none); cursor: pointer; }
+    .description {  }
 
     .quantity,
     .unit { font-weight: bold; }

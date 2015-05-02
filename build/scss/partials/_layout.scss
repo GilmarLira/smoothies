@@ -38,18 +38,18 @@ a:active { color: $color-text; }
 
     .cell {
       @extend %top-border;
-      @extend %gradient-clip;
+      // @extend %gradient-clip;
       @include position(absolute);
       @include span-columns(16 of 16);
       @include transform(translate3d(0, 0, 0));
       height: lines(2);
-      // overflow: hidden;
+      overflow: hidden;
 
       &.enter { opacity: 0; }
 
-      &:hover,
-      &:active,
-      &.selected { @extend %gradient-bar-selected; }
+      // &:hover,
+      // &:active,
+      // &.selected { @extend %gradient-bar-selected; }
     }
   }
 }

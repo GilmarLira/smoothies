@@ -74,6 +74,7 @@ function init() {
 			.entries(csv);
 
 		d3.csv("js/recipe_ingredients.csv", function(csv) {
+			csv.forEach(function(d) { d.recipe_id = +d.recipe_id; d.ingredient_id = +d.ingredient_id; })
 			recipe_ingredients = d3.nest()
 				.key(function(d) { return d.recipe_id; })
 				.entries(csv);
@@ -197,7 +198,7 @@ function list_ingredients() {
 		ing_enter
 			.append("span")
 			.attr("class", "quantity")
-			.text(function(a) { return a.quantity + " "; });
+			.text(function(a) { return (a.ingredient_id === 0) ? "" : a.quantity + " "; });
 
 		ing_enter
 			.append("span")
@@ -212,7 +213,7 @@ function list_ingredients() {
 			.attr("class", "name") // todo: get ingredient group
 			.text(function(a) {
 				ing_obj = find_ingredient_id(a.ingredient_id);
-				return ing_obj.name;
+				return (a.ingredient_id === 0) ? "Add " + ing_obj.name : ing_obj.name;
 			});
 	});
 }
