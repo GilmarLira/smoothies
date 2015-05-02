@@ -7,7 +7,7 @@ var recipes,
 	recipe_ingredients,
 	favorites = [];
 
-var dur = 600;
+var dur = 800;
 
 
 $(document).ready(init);
@@ -121,7 +121,7 @@ function list_recipes(list) {
 			.attr("class", "controls")
 		.append("input")
 			.attr("type", "checkbox")
-			.attr("class", "favorite")
+			.attr("class", "favorite-check")
 			.property("checked", function(d) { return (is_favorite(d.recipe_id)); })
 			.on("change", update_favorites);
 
@@ -129,6 +129,7 @@ function list_recipes(list) {
 	recipes_list
 		.order()
 		.style("top", function(d, i) { return i * lines(2) + "px"; })
+		.classed("favorite", function(d) { return (is_favorite(d.recipe_id)); })
 		.transition()
 			.call(enter_transition);
 
@@ -170,7 +171,7 @@ function enter_transition(transition) {
 	transition
 		// .each("start", function(d, i) { d3.select(this).style("height", lines(2)); })
 		.duration(dur)
-		.delay(function(d, i) { return i * dur/8; })
+		.delay(function(d, i) { return i/transition.size() * dur; })
 		.style("left", "0%")
 		.style("opacity", 1);
 }
@@ -180,7 +181,7 @@ function exit_transition(transition) {
 	transition
 		// .each("start", function(d, i) { d3.select(this).style("height", lines(2)); })
 		.duration(dur)
-		.delay(function(d, i) { return i * dur/16; })
+		.delay(function(d, i) { return i/transition.size() * dur/4; })
 		.style("left", "-100%")
 		.style("opacity", 1e-6)
 	.remove();

@@ -27,6 +27,7 @@
 
 
 %gradient { @include linear-gradient(#5a076a, #f13b04); }
+// %gradient-favorite { @include linear-gradient(#f1aa11, #59f41c); }
 %gradient-bar-selected {
   @include border-image(linear-gradient(left, #f5187f, #fd8606) 20 stretch);
   @include linear-gradient(#f5187f, #fd8606);

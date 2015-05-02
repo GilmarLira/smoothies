@@ -14,7 +14,9 @@
     .unit { font-weight: bold; }
 
     .controls { @include position(absolute, 5px 10px null null); }
-    .favorite { @include transform(scale(2)); }
+    .favorite-check { @include transform(scale(2)); }
+
+    // &.favorite { @extend %gradient-favorite; }
 
   }
 }
