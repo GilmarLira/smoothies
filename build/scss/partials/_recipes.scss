@@ -7,14 +7,14 @@
     @extend %top-border;
     @extend %gradient-clip;
 
-    .title,
+    .title { @extend %clip; @include user-select(none); cursor: pointer; }
     .description { @extend %clip; }
 
     .quantity,
     .unit { font-weight: bold; }
 
-    &.selected {
-      height: lines(8);
-    }
+    .controls { @include position(absolute, 5px 10px null null); }
+    .favorite { @include transform(scale(2)); }
+
   }
 }

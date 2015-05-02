@@ -33,28 +33,23 @@ a:active { color: $color-text; }
 
   .list-view {
     @include position;
-    @include clearfix;
+    @include span-columns(16 of 16);
+    // @include clearfix;
     height: 100%;
 
     .cell {
       @include position(absolute);
-      @include fill-parent;
+      @include span-columns(16 of 16);
+      @include transform(translate3d(0, 0, 0));
+      @include transition(background 1s);
       height: lines(2);
       overflow: hidden;
 
       &.enter { left: 100%; opacity: 0; }
+
+      &:hover,
+      &:active,
+      &.selected { @extend %gradient-bar-selected; }
     }
   }
-
-  // > section {
-  //   @include fill-parent;
-  //   @include position(absolute);
-  //   @include transition(all .8s ease);
-  //
-  //   // &:not(:first-child) { @include transform(translateX(100%)); }
-  //   &:not(:first-child) { display: none; }
-  //   // &.selected { @include transform(translateX(0%)); }
-  //   &.selected { display: block; }
-  // }
-
 }

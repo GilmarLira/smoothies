@@ -5,7 +5,7 @@
 var recipes,
 	ingredients,
 	recipe_ingredients,
-	favorites = ["1", "2", "4"];
+	favorites = [];
 
 var dur = 600;
 
@@ -18,7 +18,7 @@ function init() {
 		list_menu();
 	});
 
-	d3.csv("js/recipes.csv", function(csv) { recipes = csv; });
+	d3.csv("js/recipes.csv", function(csv) { csv.forEach(function(d) { d.recipe_id = +d.recipe_id; }); recipes = csv; });
 	d3.csv("js/ingredients.csv", function(csv) {
 		ingredients = d3.nest()
 			.key(function(d) { return d.ingredient_id; })
@@ -42,10 +42,18 @@ function list_menu() {
 		.selectAll("div")
 		.data(menu_data, function(d) { return d; });
 
+
+	// MENU EXIT
+	menu.exit()
+		.attr("class", "cell exit")
+		.transition()
+			.call(exit_transition);
+
+	// MENU ENTER
 	var menu_enter = menu.enter()
 		.append("div")
-			.attr("class", "cell")
-			.style("top", function(d, i) { return i * 4 + "rem"; })
+			.attr("class", "cell enter")
+			.style("top", function(d, i) { return i * lines(2) + "px"; })
 			.classed("enter", true);
 
 	menu_enter
@@ -56,12 +64,8 @@ function list_menu() {
 				.attr("rel", function(d) { return d; })
 				.text(function(d) { return d; });
 
+	// MENU UPDATE
 	menu_enter.transition().call(enter_transition);
-
-	menu.exit()
-		.attr("class", "cell exit")
-		.transition()
-		.call(exit_transition);
 
 
 	$(".menu a").click(function() {
@@ -86,23 +90,21 @@ function list_recipes(list) {
 
 	// EXIT
 	recipes_list.exit()
+		.attr("class", "cell recipe exit")
 		.transition()
 			.call(exit_transition);
 
 	// ENTER
 	container_enter = recipes_list.enter()
 		.append("div")
-			.attr("class", "cell recipe enter")
-			.style("top", function(d, i) { return i * 4 + "rem"; });
+			.attr("class", "cell recipe enter");
 
 
 	container_enter
 		.append("h2")
 			.attr("class", "title")
 			.text(function(d) { return d.name; })
-			.on("click", function() {
-				$(this).parents(".recipe").toggleClass("selected");
-			});
+			.on("click", toggle_recipe);
 
 	container_enter
 		.append("p")
@@ -120,13 +122,13 @@ function list_recipes(list) {
 		.append("input")
 			.attr("type", "checkbox")
 			.attr("class", "favorite")
-			.on("change", function(d) {
-				var checked = this.checked;
-				if(checked) { favorites.push(d.recipe_id); }
-			});
+			.property("checked", function(d) { return (is_favorite(d.recipe_id)); })
+			.on("change", update_favorites);
 
 	// UPDATE
 	recipes_list
+		.order()
+		.style("top", function(d, i) { return i * lines(2) + "px"; })
 		.transition()
 			.call(enter_transition);
 
@@ -166,6 +168,7 @@ function list_ingredients() {
 
 function enter_transition(transition) {
 	transition
+		// .each("start", function(d, i) { d3.select(this).style("height", lines(2)); })
 		.duration(dur)
 		.delay(function(d, i) { return i * dur/8; })
 		.style("left", "0%")
@@ -175,6 +178,7 @@ function enter_transition(transition) {
 
 function exit_transition(transition) {
 	transition
+		// .each("start", function(d, i) { d3.select(this).style("height", lines(2)); })
 		.duration(dur)
 		.delay(function(d, i) { return i * dur/16; })
 		.style("left", "-100%")
@@ -211,8 +215,59 @@ function find_recipe_id(id) {
 }
 
 
+function toggle_recipe(r, i) {
+	var $cel = $(this).parents(".cell");
+	var height, top;
+
+	if($cel.is(".selected")) {
+		height = lines(2);
+		top = "-=" + lines(11);
+	} else {
+		height = lines(12);
+		top = "+=" + lines(11);
+	}
+
+	$cel
+		.toggleClass("selected")
+		.animate({
+			height: height
+		}, dur/2)
+		.nextAll()
+			.animate({
+				top: top
+			}, dur/2);
+}
 
 
+function lines(n) {
+	var line_height = parseInt($("body").css("line-height"));
+	return n * line_height;
+}
+
+
+function update_favorites(d) {
+	if(this.checked) {
+		add_favorite(d.recipe_id);
+	} else {
+		remove_favorite(d.recipe_id);
+	}
+}
+
+function add_favorite(id) {
+	favorites.push(id);
+}
+
+function remove_favorite(id) {
+	favorites.splice(get_favorite(id), 1);
+}
+
+function get_favorite(id) {
+	return $.inArray(id, favorites);
+}
+
+function is_favorite(id) {
+	return (get_favorite(id) == -1) ? false : true;
+}
 
 
 

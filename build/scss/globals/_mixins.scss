@@ -27,6 +27,10 @@
 
 
 %gradient { @include linear-gradient(#5a076a, #f13b04); }
+%gradient-bar-selected {
+  @include border-image(linear-gradient(left, #f5187f, #fd8606) 20 stretch);
+  @include linear-gradient(#f5187f, #fd8606);
+}
 
 %clip {
   -webkit-background-clip: text;
