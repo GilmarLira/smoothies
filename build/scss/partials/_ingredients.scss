@@ -16,6 +16,15 @@
 
   .header { height: lines(2); }
 
+  .group {
+    @include position;
+    background: #ff0;
+
+    &:nth-of-type(2) { top: calc(2 * #{lines(2)}); }
+
+
+  }
+
   &.ingredients .title {
     @include media($l) { @include span-columns(14 of 16);}
     @include media($s) { @include span-columns(7 of 8);}

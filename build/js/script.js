@@ -100,11 +100,11 @@ function init() {
 			d.ingredient_id = +d.ingredient_id;
 		});
 
-		// ingredients = d3.nest()
-		// 	.key(function(d) { return +d.ingredient_id; })
-		// 	.entries(csv);
+		ingredients = d3.nest()
+			.key(function(d) { return d.group; })
+			.entries(csv);
 
-		ingredients = csv;
+		// ingredients = csv;
 
 		d3.csv("data/recipe_ingredients-list.csv", function(csv) {
 			csv.forEach(function(d) {
@@ -277,12 +277,12 @@ function list_recipe_ingredients(selection) {
 
 function list_ingredients() {
 	filter = new Filter();
-	$(".list-view").append($("<div class='filter-button'>Choose ingredients</div>"));
+	$(".container").append($("<div class='filter-button'>Choose ingredients</div>"));
 
 	var ingredient_list = d3.select(".list-view")
 			.attr("class", "list-view ingredients")
 			.selectAll(".cell")
-			.data(ingredients, function(d) { return d.ingredient_id; });
+			.data(ingredients, function(d) { return d.key; });
 
 	// EXIT
 	ingredient_list.exit()
@@ -292,38 +292,55 @@ function list_ingredients() {
 			.call(exit_transition);
 
 	// ENTER
-	var ingredient_list_enter = ingredient_list.enter()
+	var ingredient_group = ingredient_list.enter()
 		.append("div")
 			.classed("exit", false)
-			.attr("class", "cell ingredient enter")
-			.attr("data-ingredient-id", function(d) { return d.ingredient_id; });
+			.attr("class", "cell group enter")
+			.attr("data-ingredient-group", function(d) { return d.key; })
+			.attr("data-rows", function(d) { return d.values.length; })
+			.style("height", function(d) { return d.values.length * lines(2) + "px"; })
+			.each(function(d, i) {
+				var ingredient_list = d3.select(this).selectAll(".ingredient").data(d.values, function(d) { return d.ingredient_id; });
+				var ingredient_enter = ingredient_list.enter()
+					.append("div")
+						.attr("class", "cell ingredient enter")
+						.attr("data-ingredient-id", function(d) { return d.ingredient_id; });
 
-	var ingredient_header = ingredient_list_enter
-		.append("div")
-			.attr("class", "header");
+				var ingredient_header = ingredient_enter
+					.append("div")
+						.attr("class", "header");
 
-	ingredient_header
-		.append("h2")
-			.attr("class", "title")
-			.text(function(d) { return d.name; });
-			// .on("click", toggle_recipe);
+				ingredient_header
+					.append("h2")
+						.attr("class", "title")
+						.text(function(d) { return d.name; });
+						// .on("click", toggle_recipe);
 
-	ingredient_header
-		.append("div")
-			.attr("class", "controls")
-		.append("input")
-			.attr("type", "checkbox")
-			.attr("class", "ingredient-check")
-			.attr("data-ingredient-id", function(d) { return d.ingredient_id; })
-			.on("change", toggle_ingredient);
+				ingredient_header
+					.append("div")
+						.attr("class", "controls")
+					.append("input")
+						.attr("type", "checkbox")
+						.attr("class", "ingredient-check")
+						.attr("data-ingredient-id", function(d) { return d.ingredient_id; })
+						.on("change", toggle_ingredient);
 
-	// UPDATE
-	ingredient_list
-		.classed("exit", false)
-		.order()
-		.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * lines(2) + "px)"; })
-		.transition()
-			.call(enter_transition);
+				// UPDATE
+				ingredient_list
+					.classed("exit", false)
+					.order()
+					.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * lines(2) + "px)"; })
+					.transition()
+						.call(enter_transition);
+			});
+
+		// UPDATE
+		ingredient_list
+			.classed("exit", false)
+			.order()
+			.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * lines(2) + "px)"; })
+			.transition()
+				.call(enter_transition);
 }
 
 
