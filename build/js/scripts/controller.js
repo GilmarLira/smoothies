@@ -31,6 +31,8 @@ function init() {
 			d.ingredient_id = +d.ingredient_id;
 		});
 
+		csv.sort(function(a, b) { return d3.descending(a.group, b.group); });
+
 		// ingredients = d3.nest()
 		// 	.key(function(d) { return +d.ingredient_id; })
 		// 	.entries(csv);
@@ -207,13 +209,17 @@ function list_recipe_ingredients(selection) {
 
 
 function list_ingredients() {
+	var ingredients_subset = ingredients.filter(function(i) {
+		return (i.group != "beverage");
+	});
+
 	filter = new Filter();
 	$(".list-view").append($("<div class='filter-button'>Choose ingredients</div>"));
 
 	var ingredient_list = d3.select(".list-view")
 			.attr("class", "list-view ingredients")
 			.selectAll(".cell")
-			.data(ingredients, function(d) { return d.ingredient_id; });
+			.data(ingredients_subset, function(d) { return d.ingredient_id; });
 
 	// EXIT
 	ingredient_list.exit()
@@ -227,7 +233,8 @@ function list_ingredients() {
 		.append("div")
 			.classed("exit", false)
 			.attr("class", "cell ingredient enter")
-			.attr("data-ingredient-id", function(d) { return d.ingredient_id; });
+			.attr("data-ingredient-id", function(d) { return d.ingredient_id; })
+			.attr("data-ingredient-group", function(d) { return d.group; });
 
 	var ingredient_header = ingredient_list_enter
 		.append("div")

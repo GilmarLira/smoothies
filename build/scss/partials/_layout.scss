@@ -56,7 +56,7 @@ a:visited { color: inherit; }
     @include position;
 
     .cell {
-      @extend %gradient-bar;
+      @include gradient-before();
       @include top-bar;
       @include position(absolute);
       @include span-columns(16 of 16);

@@ -14,9 +14,17 @@
 
   &.ingredients { height: calc(47 * #{lines(2)}); }
 
+  .ingredient {
+    &[data-ingredient-group='greens'] { @include gradient-before($color-green, darken($color-green, 20)); }
+
+    &[data-ingredient-group='fruits'] { @include gradient-before; }
+
+    &[data-ingredient-group='boosts'] { @include gradient-before($color-purple, $color-pink); }
+  }
+
   .header { height: lines(2); }
 
-  &.ingredients .title {
+  .title {
     @include media($l) { @include span-columns(14 of 16);}
     @include media($s) { @include span-columns(7 of 8);}
     @include media($s) { @include span-columns(7 of 8);}
