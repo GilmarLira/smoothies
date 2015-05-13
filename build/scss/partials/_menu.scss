@@ -3,9 +3,11 @@
 // ////////////////////////////////////
 
 .menu {
+  @include margins(0, 2);
+  height: lines(8);
   // @extend %gradient-clip;
 
   .cell {
-    
+    // @extend %clip;
   }
 }

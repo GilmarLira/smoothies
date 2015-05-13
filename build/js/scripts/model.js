@@ -1,5 +1,6 @@
-// // Model
-// // ////////////////////////////////////
+
+// model
+// ////////////////////////////////////
 
 var line_height;
 
@@ -7,6 +8,16 @@ function lines(n) {
 	if(!line_height) { line_height = parseInt($("body").css("line-height")); }
 	return n * line_height;
 }
+
+
+function get_intersection(arr1, arr2) {
+	var filter = arr1.filter(function(n) {
+		return (arr2.indexOf(n) != -1);
+	});
+
+	return filter;
+}
+
 
 
 

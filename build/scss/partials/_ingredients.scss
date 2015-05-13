@@ -1,0 +1,54 @@
+
+// ingredients
+// ////////////////////////////////////
+
+.filter-button {
+  @include fill-parent;
+  @include position(fixed, null null 0 null);
+  background: #ff0;
+  height: lines(2);
+  z-index: 1;
+}
+
+.list-view {
+
+  &.ingredients { height: calc(47 * #{lines(2)}); }
+
+  .header { height: lines(2); }
+
+  &.ingredients .title {
+    @include media($l) { @include span-columns(14 of 16);}
+    @include media($s) { @include span-columns(7 of 8);}
+    @include media($s) { @include span-columns(7 of 8);}
+    @include user-select(none);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .controls {
+    @include media($l) { @include span-columns(2 of 16); @include omega; }
+    @include media($s) { @include span-columns(1 of 8);  }
+    @include media($s) { @include span-columns(1 of 8);  }
+    height: lines(2);
+  }
+
+  // .cell.not-combo { display: none; }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// end

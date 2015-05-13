@@ -2,21 +2,94 @@
 // Helper Mixins
 // ////////////////////////////////////////////////////
 
-@function lines($lines) { @return $lines * $body-font-size * $body-line-height; }
 
 @mixin outline($color: #800080) { outline: 1px solid $color; }
 
-@mixin top-bar($color: $color-text, $height: .5rem) {
+// @mixin top-bar($color: $color-text, $height: .5rem) {
+//   &::before {
+//     background: $color;
+//     content: ' ';
+//     display: block;
+//     height: $height;
+//   }
+// }
+
+@mixin responsive-widths() {
+  @include media($m) { max-width: $m-width; }
+  @include media($p) { max-width: $p-width; }
+  @include media($s) { max-width: $s-width; }
+}
+
+@mixin responsive-container() {
+  @include responsive-widths;
+  @include outer-container;
+}
+
+@mixin baseline-grid($c1: #0ff, $c2: #fff, $h: 2rem, $o: 0) {
+  @include linear-gradient(top, #{$c1} 0, #{$c2} 1px);
+  background-position-y: $o;
+  background-repeat: repeat-y;
+  background-size: 100% $h;
+}
+
+@mixin left-bar($color: $color-text, $height: 5) {
   &::before {
     background: $color;
     content: ' ';
     display: block;
-    height: $height;
+    height: lines($height);
   }
 }
 
+@mixin top-bar($c: $color-text, $w: 100%, $h: .2rem) {
+  @include transition(width .2s ease);
+  @include position;
+  color: $c;
+
+  &::before {
+    @include transition(width .2s ease);
+    @include position(absolute);
+    @include size($w $h);
+    background-color: $c;
+    content: ' ';
+    display: block;
+    // top: -$h;
+  }
+}
+
+@mixin bot-bar($c: $color-text, $w: 100%, $h: .4rem) {
+
+  @include position;
+  color: $c;
+
+  &::after {
+    @include transition(width .2s ease);
+    @include position(absolute);
+    @include size($w $h);
+    background-color: $c;
+    content: ' ';
+    display: block;
+    top: 100%;
+  }
+}
+
+@mixin bar-hover($c: $color-fuscia, $w: 100%, $h: .2rem) {
+  &:hover,
+  &:active {
+    color: $c;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+      @include size($w $h);
+      background-color: $c;
+    }
+  }
+}
+
+
 %top-border {
-  border-top: .25rem solid $color-text;
+  border-top: .2rem solid $color-text;
   @include border-image(linear-gradient(left, #5a076a, #f13b04) 20 stretch);
 }
 
@@ -27,6 +100,7 @@
 
 
 %gradient { @include linear-gradient(#5a076a, #f13b04); }
+%gradient-bar { &::before { @include linear-gradient(left, #f5187f, #fd8606); } }
 // %gradient-favorite { @include linear-gradient(#f1aa11, #59f41c); }
 %gradient-bar-selected {
   @include border-image(linear-gradient(left, #f5187f, #fd8606) 20 stretch);

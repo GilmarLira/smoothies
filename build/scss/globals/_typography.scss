@@ -10,12 +10,14 @@ $body-line-height: 2;
 $scale-factor: 1.6; // http://modularscale.com/
 
 @mixin typeface-helv { font-family: $fontfamily-helv; }
+@function lines($lines) { @return $lines * $body-font-size * $body-line-height; }
 
 body {
   @include typeface-helv;
   @include rhythm(0);
   color: $color-text;
   font-weight: 100;
+  // text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -26,6 +28,8 @@ h1,
 
 h2,
 .beta {
+  @include media($s) { @include rhythm(1, 0, 1); @include position(.275em null null null); }
+  @include position(.275em null null null);
   @include rhythm(1, 0, 1);
   font-weight: bold;
 }
@@ -58,4 +62,20 @@ p,
 ul,
 ol {
   @include rhythm(1, 0, 1);
+  @include position(.275em null null null);
 }
+
+
+%baseline-shift { @include position(.275em null null null); }
+.track { margin: 0 .5em; }
+.nowrap { white-space: nowrap; }
+
+
+
+
+
+
+
+
+
+// end

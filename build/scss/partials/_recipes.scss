@@ -2,18 +2,33 @@
 // recipes
 // ////////////////////////////////////
 
-.recipes {
-  .cell {
-    .title { @include user-select(none); cursor: pointer; }
-    .description {  }
+.list-view {
+  &.recipes { height: calc(23 * #{lines(2)}); }
 
-    .quantity,
-    .unit { font-weight: bold; }
+  .cell.recipe { background: #fff; }
 
-    .controls { @include position(absolute, 5px 10px null null); }
-    // .favorite-check { @include transform(scale(2)); }
+  .recipe-header { height: lines(2); }
 
-    // &.favorite { @extend %gradient-favorite; }
-
+  &.recipes .title {
+    @extend %link-box;
+    @include media($l) { @include span-columns(14 of 16); cursor: pointer; }
+    @include media($s) { @include span-columns(7 of 8); }
+    @include user-select(none);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
+
+  .controls {
+    @include media($l) { @include span-columns(2 of 16); }
+    @include media($s) { @include span-columns(1 of 8);  }
+    height: lines(2); 
+  }
+
+  .recipe-body { display: none; }
+  .selected .recipe-body { display: block; }
+
+  .quantity,
+  .unit { font-weight: bold; }
+
 }
