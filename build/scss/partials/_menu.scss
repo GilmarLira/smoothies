@@ -4,9 +4,10 @@
 
 .menu {
   @include media($l) { height: lines(20) !important; }
-  @include media($s) { height: lines(8) !important; }
+  @include media($p) { height: lines(20) !important; }
+  @include media($s) { height: lines(10) !important; }
   @include margins(0, 2);
-  
+
   // @extend %gradient-clip;
 
   .cell {

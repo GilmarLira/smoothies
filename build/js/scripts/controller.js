@@ -260,12 +260,6 @@ function list_recipes(list) {
 		.append("div")
 			.attr("class", "nutrition");
 
-	// recipe_nutrition
-	// 		.append("div")
-	// 			.attr("class", "base-bar")
-	// 			.style("width", function(d) {
-	// 				return get_recipe_total_mass(d) + "px";
-	// 			});
 
 	recipe_nutrition
 		.call(list_recipe_nutrients);
@@ -495,38 +489,24 @@ function list_favorites() {
 
 
 function toggle_recipe(r, i) {
-	// console.log($(this).parents(".cell")[0]);
 	var $cel = $(this).parents(".cell");
 	var height, top;
-
-	// if($cel.is(".selected")) {
-	// 	// item_height_selected = $cel.height();
-	// 	// console.log(item_height_selected);
-	// 	// height = item_height;
-	// 	// top = "-=" + item_height * 7;
-	// } else {
-	// 	console.log($cel.innerHeight());
-	// 	// item_height_selected = $cel.height();
-	// 	// console.log(item_height_selected);
-	// 	// height = item_height * 9;
-	// 	// top = "+=" + item_height * 7;
-	// }
 
 	$cel
 		.toggleClass("selected")
 		.each(function() {
 			if($cel.is(".selected")) {
-				item_height_selected = $cel.height(); // originally set by CSS
-				height = item_height_selected;
+				item_height_selected = $cel.height();
+				// height = item_height_selected;
 				top = "+=" + (item_height_selected - item_height);
 			} else {
-				height = item_height;
+				// height = item_height;
 				top = "-=" + (item_height_selected - item_height);
 			}
 		})
-		.animate({
-			height: height
-		}, dur/2)
+		// .animate({
+		// 	height: height
+		// }, dur/2)
 		.nextAll()
 			.animate({
 				top: top
@@ -588,7 +568,7 @@ function update_ingredient_list_view() {
 	// console.log("update ingredient list view");
 	$(".filter-button")
 		.find("p")
-			.text(function() { return (filter.recipes.length != 1) ? "Found " + filter.recipes.length + " smoothies" : "Found" + filter.recipes.length + " smoothie"; })
+			.text(function() { return (filter.recipes.length != 1) ? "Found " + filter.recipes.length + " smoothies" : "Found " + filter.recipes.length + " smoothie"; })
 			.end()
 		.on("click", function() {
 			list_recipes(filter.recipes);

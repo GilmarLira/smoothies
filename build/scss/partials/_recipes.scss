@@ -9,7 +9,6 @@
   @include media($s) { height: calc(23 * #{lines(2)}); }
 
 
-  // .cell.recipe { background: #fff; }
   .recipe {
     @include media($l) { min-height: lines(5); }
     @include media($p) { min-height: lines(4); }
@@ -21,7 +20,6 @@
   .recipe-header { @include clearfix; }
 
   .title {
-    // @extend %link-box;
     @include media($l) { @include span-columns(14 of 16); cursor: pointer; }
     @include media($p) { @include span-columns(14 of 16); }
     @include media($s) { @include span-columns(7 of 8); }
@@ -48,6 +46,7 @@
     @include media($l) {
       height: lines(36);
 
+      // &[data-recipe-id='2'] { height: lines(30); }
       &[data-recipe-id='3'] { height: lines(38); }
       &[data-recipe-id='6'] { height: lines(39); }
       &[data-recipe-id='7'] { height: lines(41); }
@@ -83,7 +82,8 @@
       &[data-recipe-id='22'] { height: lines(15); }
       &[data-recipe-id='23'] { height: lines(19); }
     }
-    // background: #ff0 !important;
+
+    // background: #ff0;
 
     .recipe-body { display: block; }
   }

@@ -38,13 +38,12 @@ a:visited { color: inherit; }
   @include paddings(.5, .5);
 
   .title {
-    @include media($l) { @include rhythm(3); &:hover { cursor: pointer; } }
+    @include media($l) { @include rhythm(3); }
     @include media($p) { @include rhythm(2); @include position(.05em null null null); }
     @include media($s) { @include rhythm(1); }
-
     font-weight: bold;
 
-
+    &:hover { cursor: pointer; }
   }
 }
 
@@ -58,14 +57,15 @@ a:visited { color: inherit; }
 
     .cell {
       @include top-bar;
-      @include media($l) { min-height: lines(5); &::before { height: .5rem; }}
-      @include media($p) { min-height: lines(4); }
-      @include media($s) { min-height: lines(2); }
+      @include media($l) { min-height: lines(5); &::before { height: .5rem; } }
+      @include media($p) { min-height: lines(4); &::before { height: .5rem; } }
+      @include media($s) { min-height: lines(2); &::before { height: .25rem; }}
       @include gradient-before();
       @include position(absolute);
       @include span-columns(16 of 16);
+      // @include transition(height 1s ease);
       overflow: hidden;
-      
+
       &.enter { opacity: 0; }
     }
   }
@@ -90,7 +90,7 @@ input[type='checkbox'] {
 
 
 .footer {
-  @include media($l) { @include margins(3); }
+  @include media($l) { @include margins(2); }
   @include media($m) { @include margins(2); }
   @include media($p) { @include margins(2); }
   @include media($s) { @include margins(1); }
@@ -98,4 +98,21 @@ input[type='checkbox'] {
   @include rhythm(0);
   // color: $color-gray;
   text-align: right;
+
+  .logo {
+    @include media($l) { @include span-columns(1.5 of 16); float: right;}
+    @include media($p) { @include span-columns(2 of 16); float: right;}
+    @include media($s) { @include span-columns(2 of 8);  float: right;}
+    @include background(url('../img/lira.svg') left bottom / 100% no-repeat);
+    @include bot-bar(transparent, 0%);
+    @include bar-hover($color-text);
+    background-origin: content-box;
+    box-sizing: content-box;
+    cursor: pointer;
+    height: lines(1);
+    opacity: .4;
+    padding-bottom: 12px; // 44px min area for mobile
+
+    &:hover { opacity: 8; }
+  }
 }
