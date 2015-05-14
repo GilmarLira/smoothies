@@ -128,14 +128,14 @@
 @mixin button($color: $color-text, $radius: 3px) {
   cursor: pointer;
   display: inline-block;
-  padding: .5em 1em;
+  padding: 0 2em;
   color: $color;
   background-color: rgba(#fff, .1);
   border-radius: $radius;
   box-shadow: 0 0 0 1px rgba(#000, .3);
   opacity: .5;
-  @include typeface-montserrat;
-  @include margins($before: 1, $after: 1);
+  // @include typeface-montserrat;
+  // @include margins($before: 1, $after: 1);
   &:after { content: ''; }
   &:hover { opacity: 1; }
 }

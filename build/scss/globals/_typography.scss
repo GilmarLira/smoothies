@@ -28,6 +28,8 @@ h1,
 
 h2,
 .beta {
+  @include media($l) { @include rhythm(4, 0, 1); @include position(-.035em null null null); }
+  @include media($p) { @include rhythm(3, 0, 1); @include position(-.09em null null null); }
   @include media($s) { @include rhythm(1, 0, 1); @include position(.275em null null null); }
   @include position(.275em null null null);
   @include rhythm(1, 0, 1);
@@ -37,32 +39,30 @@ h2,
 h3,
 .gamma {
   @include rhythm(1, 0, 1);
-  line-height: .9;
 }
 
 h4,
 .delta {
   @include rhythm(0, 0, 0);
-  line-height: 1;
 }
 
 h5,
 .epsilon {
   @include rhythm(-1, 0, 0);
-  line-height: 1;
 }
 
 h6,
 .zeta {
   @include rhythm(-2, 0, 0);
-  line-height: 1;
 }
 
 p,
 ul,
 ol {
-  @include rhythm(1, 0, 1);
-  @include position(.275em null null null);
+  @include media($l) { @include rhythm(3, 0, 1); @include position(.45em null null null); }
+  @include media($p) { @include rhythm(2, 0, 1); @include position(.44em null null null); }
+  @include media($s) { @include rhythm(1, 0, 1); @include position(.275em null null null); }
+
 }
 
 

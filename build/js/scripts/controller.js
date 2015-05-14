@@ -6,7 +6,9 @@ var recipes = [],
 	ingredients = [],
 	favorites,
 	filter,
-	nutrients = [];
+	nutrients = [],
+	item_height,
+	item_height_selected;
 
 var dur = 800;
 
@@ -141,7 +143,8 @@ function get_recipe_masses(r_id) {
 function list_menu() {
 	$(".filter-button").remove();
 
-	var menu_data = ["Recipes", "Favorites", "Ingredients", "Plans"];
+	// var menu_data = ["Recipes"];
+	var menu_data = ["Recipes", "Favorites", "Ingredients", "Plan"];
 	var menu = d3.select(".list-view")
 		.attr("class", "list-view menu")
 		.selectAll(".cell")
@@ -159,9 +162,9 @@ function list_menu() {
 	// MENU ENTER
 	var menu_enter = menu.enter()
 		.append("div")
-			.attr("class", "cell enter")
-			.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * lines(2) + "px)"; });
+			.attr("class", "cell enter");
 
+	item_height = (!item_height) ? $(".cell").height() : item_height;
 
 	menu_enter
 		.append("h2")
@@ -173,6 +176,8 @@ function list_menu() {
 
 	// MENU UPDATE
 	menu_enter
+		// .style("top", 0)
+		.style("-webkit-transform", function(d, i) { return "translate(100%, " + i * item_height + "px)"; })
 		.classed("exit", false)
 		.transition()
 			.call(enter_transition);
@@ -381,7 +386,7 @@ function list_ingredients() {
 	});
 
 	filter = new Filter();
-	$(".list-view").append($("<div class='filter-button'>Choose ingredients</div>"));
+	$(".list-view").append($("<div class='filter-button'><p>Choose ingredients</p></div>"));
 
 	var ingredient_list = d3.select(".list-view")
 			.attr("class", "list-view ingredients")
@@ -442,8 +447,8 @@ function enter_transition(transition) {
 		.duration(dur)
 		.delay(function(d, i) { return (i+1)/transition.size() * dur; })
 		.styleTween("-webkit-transform", function(d, i) {
-			startTranslateState = "translate(100%, " + i * lines(2) + "px)";
-			endTranslateState = "translate(0%, " + i * lines(2) + "px)";
+			startTranslateState = "translate(100%, " + i * item_height + "px)";
+			endTranslateState = "translate(0%, " + i * item_height + "px)";
 			translateInterpolator = d3.interpolateString(startTranslateState, endTranslateState);
     	return translateInterpolator;
     })
@@ -463,8 +468,8 @@ function exit_transition(transition) {
 		.duration(dur/2)
 		.delay(function(d, i) { return i/transition.size() * dur/2; })
 		.styleTween("-webkit-transform", function(d, i) {
-			startTranslateState = "translate(0%, " + i * lines(2) + "px)";
-			endTranslateState = "translate(-100%, " + i * lines(2) + "px)";
+			startTranslateState = "translate(0%, " + i * item_height + "px)";
+			endTranslateState = "translate(-100%, " + i * item_height + "px)";
 			translateInterpolator = d3.interpolateString(startTranslateState, endTranslateState);
     	return translateInterpolator;
     })
@@ -493,11 +498,12 @@ function toggle_recipe(r, i) {
 	var height, top;
 
 	if($cel.is(".selected")) {
-		height = lines(2);
-		top = "-=" + lines(16);
+		// item_height_selected = $cel.height();
+		height = item_height;
+		top = "-=" + item_height * 7;
 	} else {
-		height = lines(17);
-		top = "+=" + lines(16);
+		height = item_height * 9;
+		top = "+=" + item_height * 7;
 	}
 
 	$cel
@@ -565,7 +571,9 @@ function get_recipe_ingredients(r_id) {
 function update_ingredient_list_view() {
 	// console.log("update ingredient list view");
 	$(".filter-button")
-		.text("Found" + filter.recipes.length + " smoothies")
+		.find("p")
+			.text(function() { return (filter.recipes.length != 1) ? "Found " + filter.recipes.length + " smoothies" : "Found" + filter.recipes.length + " smoothie"; })
+			.end()
 		.on("click", function() {
 			list_recipes(filter.recipes);
 			$(this).remove();

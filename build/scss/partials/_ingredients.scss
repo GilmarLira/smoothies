@@ -5,13 +5,21 @@
 .filter-button {
   @include fill-parent;
   @include position(fixed, null null 0 null);
-  background: #ff0;
-  height: lines(2);
+  @include media($l) { height: lines(3); }
+  @include media($p) { height: lines(3); }
+  @include media($s) { height: lines(2); }
+  background: #fff;
   z-index: 1;
+
+  p {
+    @include button;
+    @include media($l) { @include position(.4em null null 25rem); @include rhythm(2); }
+    @include media($p) { @include position(.4em null null 6rem); opacity: 1; }
+    @include media($s) { @include position(.5em null null .8rem); opacity: 1; }
+  }
 }
 
 .list-view {
-
   &.ingredients { height: calc(47 * #{lines(2)}); }
 
   .ingredient {
@@ -20,11 +28,11 @@
     &[data-ingredient-group='boosts'] { @include gradient-before($color-purple, $color-pink); }
   }
 
-  .header { height: lines(2); }
+  .header { @include clearfix; }
 
   .title {
     @include media($l) { @include span-columns(14 of 16);}
-    @include media($s) { @include span-columns(7 of 8);}
+    @include media($p) { @include span-columns(14 of 16);}
     @include media($s) { @include span-columns(7 of 8);}
     @include user-select(none);
     overflow: hidden;
@@ -33,20 +41,29 @@
   }
 
   .controls {
-    @include media($l) { @include span-columns(2 of 16); @include omega; }
-    @include media($s) { @include span-columns(1 of 8);  }
-    @include media($s) { @include span-columns(1 of 8);  }
-    height: lines(2);
+    @include media($l) { @include span-columns(2 of 16); @include omega; height: lines(4); }
+    @include media($p) { @include span-columns(2 of 16);  }
+    @include media($s) { @include span-columns(1 of 8);  height: lines(2);}
   }
 
-  // .nutrients { @include rhythm(0); }
 
-  .nutrition { @include margins(1); height: lines(5); }
+  .description {
+    @include media($l) { @include rhythm(1, 0, 1); }
+    @include media($p) { @include rhythm(1, 0, 1); }
+    @include media($s) { @include rhythm(0, 0, 1); }
+  }
+
+  .nutrition {
+    @include media($l) { @include margins(3); height: lines(5); }
+    @include media($p) { @include margins(2); height: lines(5); }
+    @include media($s) { @include margins(1); height: lines(5); }
+  }
 
   .nutrient-bar {
-    @include margins(0, .5);
+    @include media($l) { height: lines(1); @include margins(0, 1); }
+    @include media($p) { height: lines(1); @include margins(0); }
+    @include media($s) { height: lines(.5); @include margins(0, .5);}
     float: left;
-    height: lines(.5);
 
     &.lipids { background: $color-purple; }
     &.carbs { background: $color-pink; }
@@ -54,12 +71,12 @@
     &.vitamins-and-minerals { background: $color-green; }
   }
 
-  .graph-labels { @include span-columns(8 of 8); height: lines(2); }
+  .graph-labels { @include span-columns(8 of 8); }
+
   .nutrient-label {
     @include position(.625em null null null);
     color: $color-text !important;
     float: left;
-    height: lines(2);
 
     +.nutrient-label { margin-left: 1rem; }
 
