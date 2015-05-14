@@ -9,7 +9,7 @@ $s-width: 355px;
 // * { @include outline; }
 
 body {
-  @include baseline-grid;
+  // @include baseline-grid;
 
   &::before {
     @include responsive-widths;
@@ -54,6 +54,7 @@ a:visited { color: inherit; }
 
   .list-view {
     @include position;
+    @include margins(0, 2);
 
     .cell {
       @include top-bar;
@@ -63,7 +64,8 @@ a:visited { color: inherit; }
       @include gradient-before();
       @include position(absolute);
       @include span-columns(16 of 16);
-
+      overflow: hidden;
+      
       &.enter { opacity: 0; }
     }
   }

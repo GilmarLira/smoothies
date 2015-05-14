@@ -10,12 +10,12 @@
 
 
   // .cell.recipe { background: #fff; }
-  .cell.recipe {
-    @include media($l) { height: lines(5); }
-    @include media($p) { height: lines(4); }
-    @include media($s) { height: lines(2); }
+  .recipe {
+    @include media($l) { min-height: lines(5); }
+    @include media($p) { min-height: lines(4); }
+    @include media($s) { min-height: lines(2); }
     background: #fff;
-    overflow: hidden;
+
   }
 
   .recipe-header { @include clearfix; }
@@ -39,13 +39,51 @@
 
   .recipe-body {
     @include media($l) { @include span-columns(14 of 16); display: none; }
+    @include media($p) { display: none; }
+    @include media($s) { display: none; }
   }
 
 
   .selected {
-    @include media($l) { height: lines(30) !important; }
-    @include media($s) { height: lines(16) !important; }
-    // background: #ff0;
+    @include media($l) {
+      height: lines(36);
+
+      &[data-recipe-id='3'] { height: lines(38); }
+      &[data-recipe-id='6'] { height: lines(39); }
+      &[data-recipe-id='7'] { height: lines(41); }
+      &[data-recipe-id='9'] { height: lines(38); }
+      &[data-recipe-id='10'] { height: lines(39); }
+      &[data-recipe-id='11'] { height: lines(39); }
+      &[data-recipe-id='12'] { height: lines(39); }
+      &[data-recipe-id='13'] { height: lines(39); }
+      &[data-recipe-id='14'] { height: lines(39); }
+      &[data-recipe-id='15'] { height: lines(41); }
+      &[data-recipe-id='16'] { height: lines(41); }
+      &[data-recipe-id='18'] { height: lines(42); }
+      &[data-recipe-id='19'] { height: lines(39); }
+      &[data-recipe-id='20'] { height: lines(41); }
+      &[data-recipe-id='23'] { height: lines(42); }
+    }
+
+    @include media($p) { height: lines(26); }
+    @include media($s) {
+      height: lines(16);
+
+      &[data-recipe-id='3'] { height: lines(17); }
+      &[data-recipe-id='5'] { height: lines(15); }
+      &[data-recipe-id='7'] { height: lines(17); }
+      &[data-recipe-id='8'] { height: lines(15); }
+      &[data-recipe-id='9'] { height: lines(17); }
+      &[data-recipe-id='10'] { height: lines(17); }
+      &[data-recipe-id='15'] { height: lines(18); }
+      &[data-recipe-id='16'] { height: lines(18); }
+      &[data-recipe-id='17'] { height: lines(15); }
+      &[data-recipe-id='18'] { height: lines(17); }
+      &[data-recipe-id='20'] { height: lines(17); }
+      &[data-recipe-id='22'] { height: lines(15); }
+      &[data-recipe-id='23'] { height: lines(19); }
+    }
+    // background: #ff0 !important;
 
     .recipe-body { display: block; }
   }

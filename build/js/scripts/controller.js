@@ -165,6 +165,7 @@ function list_menu() {
 			.attr("class", "cell enter");
 
 	item_height = (!item_height) ? $(".cell").height() : item_height;
+	console.log(item_height);
 
 	menu_enter
 		.append("h2")
@@ -494,20 +495,35 @@ function list_favorites() {
 
 
 function toggle_recipe(r, i) {
+	// console.log($(this).parents(".cell")[0]);
 	var $cel = $(this).parents(".cell");
 	var height, top;
 
-	if($cel.is(".selected")) {
-		// item_height_selected = $cel.height();
-		height = item_height;
-		top = "-=" + item_height * 7;
-	} else {
-		height = item_height * 9;
-		top = "+=" + item_height * 7;
-	}
+	// if($cel.is(".selected")) {
+	// 	// item_height_selected = $cel.height();
+	// 	// console.log(item_height_selected);
+	// 	// height = item_height;
+	// 	// top = "-=" + item_height * 7;
+	// } else {
+	// 	console.log($cel.innerHeight());
+	// 	// item_height_selected = $cel.height();
+	// 	// console.log(item_height_selected);
+	// 	// height = item_height * 9;
+	// 	// top = "+=" + item_height * 7;
+	// }
 
 	$cel
 		.toggleClass("selected")
+		.each(function() {
+			if($cel.is(".selected")) {
+				item_height_selected = $cel.height(); // originally set by CSS
+				height = item_height_selected;
+				top = "+=" + (item_height_selected - item_height);
+			} else {
+				height = item_height;
+				top = "-=" + (item_height_selected - item_height);
+			}
+		})
 		.animate({
 			height: height
 		}, dur/2)

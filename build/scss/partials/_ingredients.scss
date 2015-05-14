@@ -48,15 +48,18 @@
 
 
   .description {
-    @include media($l) { @include rhythm(1, 0, 1); }
+    @include media($l) { @include span-columns(11 of 16); @include rhythm(2, 0, 1); }
     @include media($p) { @include rhythm(1, 0, 1); }
-    @include media($s) { @include rhythm(0, 0, 1); }
+    // @include media($s) { @include rhythm(0, 0, 1); }
   }
+
+  .ingredients { clear: both; }
 
   .nutrition {
     @include media($l) { @include margins(3); height: lines(5); }
     @include media($p) { @include margins(2); height: lines(5); }
     @include media($s) { @include margins(1); height: lines(5); }
+
   }
 
   .nutrient-bar {
