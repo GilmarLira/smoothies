@@ -51,15 +51,17 @@ function init() {
 
 			ingredients.forEach(function(ing) {
 				var water = 0,
+						calories = 0,
+						lipids = 0,
 						proteins = 0,
 						carbs = 0,
 						vit_min = 0,
 						summary = [];
 
 				water			= +csv[1][ing.ingredient_id];
-				// calories	= +nutrients[2][ing.ingredient_id];
+				calories	= +csv[2][ing.ingredient_id];
 				proteins	= +csv[3][ing.ingredient_id];
-				// lipids 		= +nutrients[4][ing.ingredient_id];
+				lipids 		= +csv[4][ing.ingredient_id];
 				carbs 		= +csv[5][ing.ingredient_id];
 
 				vit_min		+= +csv[9][ing.ingredient_id] / 1000;   // Calcium (mg)
@@ -74,18 +76,18 @@ function init() {
 				vit_min		+= +csv[26][ing.ingredient_id] / 1000;  // Vitamin E (mg);
 
 				summary.push(water);
-				// summary.push(calories);
-				summary.push(proteins);
-				// summary.push(lipids);
+				summary.push(calories);
+				summary.push(lipids);
 				summary.push(carbs);
+				summary.push(proteins);
 				summary.push(vit_min);
 
 				ing.nutrients = summary;
 			});
 
 			recipes.forEach(function(rec) {
-				var combined_nutrients = [0, 0, 0, 0];
-				console.log("recipe " + rec.recipe_id);
+				var combined_nutrients = [0, 0, 0, 0, 0, 0];
+				// console.log("recipe " + rec.recipe_id);
 
 				rec.ingredients.forEach(function(rec_ing, i) {
 					if(rec_ing.ingredient_id) {
@@ -98,14 +100,16 @@ function init() {
 						combined_nutrients[1] += Math.round(i_mass / 100 * ing_obj.nutrients[1]);
 						combined_nutrients[2] += Math.round(i_mass / 100 * ing_obj.nutrients[2]);
 						combined_nutrients[3] += Math.round(i_mass / 100 * ing_obj.nutrients[3]);
+						combined_nutrients[4] += Math.round(i_mass / 100 * ing_obj.nutrients[4]);
+						combined_nutrients[5] += Math.round(i_mass / 100 * ing_obj.nutrients[5]);
 
 						// ing_obj.nutrients.forEach(function(n) {
 						// 	combined_nutrients[i] += Math.round(i_mass / 100 + n);
 						// });
 					}
 				});
-				console.log(combined_nutrients);
-				console.log("=============================");
+				// console.log(combined_nutrients);
+				// console.log("=============================");
 				rec.nutrients = combined_nutrients;
 			});
 		});
@@ -250,12 +254,12 @@ function list_recipes(list) {
 		.append("div")
 			.attr("class", "nutrition");
 
-	recipe_nutrition
-			.append("div")
-				.attr("class", "base-bar")
-				.style("width", function(d) {
-					return get_recipe_total_mass(d) + "px";
-				});
+	// recipe_nutrition
+	// 		.append("div")
+	// 			.attr("class", "base-bar")
+	// 			.style("width", function(d) {
+	// 				return get_recipe_total_mass(d) + "px";
+	// 			});
 
 	recipe_nutrition
 		.call(list_recipe_nutrients);
@@ -320,7 +324,7 @@ function list_recipe_ingredients(selection) {
 							// var i_fat 		= Math.round(i_mass / 100 * ing_obj.nutrients[3]);
 							var i_carbs 	= Math.round(i_mass / 100 * ing_obj.nutrients[2]);
 
-							return " (" + i_mass + "g, " + i_water + "g water, " + i_protein  + "g protein, " + i_carbs + "g carbs)";
+							// return " (" + i_mass + "g, " + i_water + "g water, " + i_protein  + "g protein, " + i_carbs + "g carbs)";
 						}
 					}
 				});
@@ -331,30 +335,30 @@ function list_recipe_ingredients(selection) {
 function list_recipe_nutrients(selection) {
 	selection
 		.each(function(d, i) {
-			var bar_graph = d3.select(this).selectAll(".nutrient-bar").data(d.nutrients);
-			var nutrient_label = ["water", "proteins", "carbs", "vitamins-and-minerals"];
+			var nutrient_label = ["lipids", "carbs", "proteins", "vitamins-and-minerals"];
+			var nutrients_subset = d.nutrients.filter(function(x, y) { return y > 1; });
+			var bar_graph = d3.select(this).selectAll(".nutrient-bar").data(nutrients_subset);
 
 			var nutrient_enter = bar_graph.enter()
 				.append("div")
-					.classed("nutrient", true);
-					// .style("width", function(d) { return d + "px"; });
-
-			// nutrient_enter
-			// 	.append("div")
-			// 		.attr("class", "nutrient-bar")
-			// 		.style("width", get_recipe_total_mass(d) + "px");
-
-
-			nutrient_enter
-				.append("div")
-					.attr("class", function(d, i) { return nutrient_label[i]; })
+					.attr("class", function(e, j) { return nutrient_label[j]; })
 					.classed("nutrient-bar", true)
-					.style("width", function(d) { return d + "px"; });
+					.style("width", function(e) {
+						return e/(get_recipe_total_mass(d) - d.nutrients[0]) * 100 + "%";
+					});
 
-			nutrient_enter
+
+			var labels = d3.select(this).append("div").classed("graph-labels", true).selectAll(".nutrient-label").data(nutrient_label);
+
+			labels.enter()
 				.append("div")
-					.attr("class", "nutrient-label")
-					.text(function(d, i) { return d +  " " + nutrient_label[i]; });
+					.attr("class", function(e, j) { return nutrient_label[j]; })
+					.classed("nutrient-label", function(e, j) { return (d.nutrients[j+2] > 0); })
+					.text(function(e, j) {
+						if(d.nutrients[j+2] > 0) {
+							return (j<3) ? e : "vitamins & minerals";
+						}
+					});
 
 		});
 }
@@ -559,7 +563,7 @@ function get_recipe_ingredients(r_id) {
 
 
 function update_ingredient_list_view() {
-	console.log("update ingredient list view");
+	// console.log("update ingredient list view");
 	$(".filter-button")
 		.text("Found" + filter.recipes.length + " smoothies")
 		.on("click", function() {
