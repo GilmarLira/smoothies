@@ -1,48 +1,48 @@
-ingredient_id,group,type,name,plural,unit,pkg,price,price_unit,ndbno,eq
-0,beverage,water,water,water,,,0.00,,null,
-1,greens,green,collard greens,collard greens,handfuls,bunch,4.00,bunch,11161,15
-2,greens,green,kale,kale,handfuls,bunch,4.00,bunch,11233,15
-3,greens,green,romaine lettuce,romaine lettuce,handfuls,bunch,3.00,bunch,11251,15
-4,greens,green,spinach,spinach,handfuls,bunch,2.00,bunch,11457,15
-5,greens,green,spring greens,spring greens,handfuls,bunch,2.00,lb,11457,15
-6,greens,green,Swiss chard,Swiss chard,handfuls,bunch,5.00,bunch,11147,15
-7,fruits,fruit,apple,apples,,unit,2.00,lb,09003,182
-8,fruits,fruit,avocado,avocados,,unit,2.00,each,09038,
-9,fruits,fruit,banana,bananas,,bunch,2.00,lb,09040,
-10,fruits,fruit,blackberry,blackberries,cup,pkg,5.00,pkg,09042,
-11,fruits,fruit,blueberry,blueberries,cup,pkg,5.00,pkg,09050,
-12,fruits,fruit,cantaloupe,cantaloupes,cup,unit,3.00,lb,09181,
-13,fruits,fruit,cranberry,cranberries,cup,pkg,5.00,pkg,09078,
-14,fruits,fruit,fig,figs,cup,pkg,5.00,pkg,09089,
-15,fruits,fruit,green grapes,green grapes,cup,pkg,5.00,pkg,09132,
-16,fruits,fruit,guava,guavas,,unit,4.00,lb,09139,
-17,fruits,fruit,honeydew,honeydews,cup,unit,3.00,lb,09184,
-18,fruits,fruit,kiwi,kiwis,,unit,1.00,each,09148,
-19,fruits,fruit,mango,mangos,cup,unit,4.00,each,09176,
-20,fruits,fruit,nectarine,nectarines,,unit,3.00,lb,09191,
-21,fruits,fruit,orange,oranges,,unit,2.00,lb,09201,
-22,fruits,fruit,papaya,papayas,cup,unit,2.00,lb,09226,
-23,fruits,fruit,peach,peaches,,unit,3.00,lb,09236,
-24,fruits,fruit,pear,pears,,unit,2.00,lb,09252,
-25,fruits,fruit,pineapple,pineapples,cup,unit,4.00,lb,09266,
-26,fruits,fruit,plum,plums,,unit,3.00,lb,09279,
-27,fruits,fruit,raspberry,raspberries,cup,pkg,5.00,pkg,09302,
-28,fruits,fruit,red grapes,red grapes,cup,pkg,5.00,pkg,09132,
-29,fruits,fruit,strawberry,strawberries,cup,pkg,5.00,pkg,09316,
-30,fruits,fruit,watermelon,watermelons,cup,unit,4.00,lb,09326,
-31,boosts,nuts,almond,almonds,cup,pkg,8.00,pkg,12061,
-32,boosts,nuts,cashew,cashews,cup,pkg,8.00,pkg,12087,
-33,boosts,nuts,walnut,walnuts,cup,pkg,8.00,pkg,12155,
-34,boosts,seeds,chia seeds,chia seeds,cup,pkg,10.00,pkg,12006,
-35,boosts,seeds,flax seeds,flax seeds,cup,pkg,8.00,pkg,12220,
-36,boosts,seeds,hemp seeds,hemp seeds,cup,pkg,8.00,pkg,null,
-37,boosts,seeds,pumpkin seeds,pumpkin seeds,cup,pkg,8.00,pkg,12014,
-38,boosts,seeds,sesame seeds,sesame seeds,cup,pkg,8.00,pkg,12023,
-39,boosts,seeds,sunflower seeds,sunflower seeds,cup,pkg,8.00,pkg,12036,
-40,boosts,supers,goji berries,goji berries,cup,pkg,8.00,pkg,null,
-41,boosts,supers,açaí berries,açaí berries,cup,pkg,8.00,pkg,null,
-42,beverage,juice,lemon,lemon,,unit,0.75,each,09152,
-43,boosts,root,maca powder,maca powder,tsp,pkg,10.00,pkg,null,
-44,greens,green,cucumber,cucumbers,,unit,1.00,each,11206,
-45,greens,green,mint,mint,leaf,bunch,2.00,bunch,02064,
-46,greens,green,butterhead lettuce,butterhead lettuce,cup,unit,2.00,each,11250,
+ingredient_id,group,type,name,plural,unit,pkg,price,price_unit,ndbno,eq,nutrients,notes
+0,beverage,water,water,water,,,0.00,,null,0,,
+1,greens,green,collard greens,collard greens,handfuls,bunch,4.00,bunch,11161,18,,1/2 cup
+2,greens,green,kale,kale,handfuls,bunch,4.00,bunch,11233,16,,1/2 cup
+3,greens,green,romaine lettuce,romaine lettuce,handfuls,bunch,3.00,bunch,11251,23.5,,1/2 cup
+4,greens,green,spinach,spinach,handfuls,bunch,2.00,bunch,11457,15,,1/2 cup
+5,greens,green,spring greens,spring greens,handfuls,bunch,2.00,lb,11457,18,,same as spinach
+6,greens,green,Swiss chard,Swiss chard,handfuls,bunch,5.00,bunch,11147,18,,1/2 cup
+7,fruits,fruit,apple,apples,,unit,2.00,lb,09003,182,,
+8,fruits,fruit,avocado,avocados,,unit,2.00,each,09038,136,,
+9,fruits,fruit,banana,bananas,,bunch,2.00,lb,09040,118,,
+10,fruits,fruit,blackberry,blackberries,cup,pkg,5.00,pkg,09042,144,,
+11,fruits,fruit,blueberry,blueberries,cup,pkg,5.00,pkg,09050,148,,
+12,fruits,fruit,cantaloupe,cantaloupes,cup,unit,3.00,lb,09181,160,,
+13,fruits,fruit,cranberry,cranberries,cup,pkg,5.00,pkg,09078,100,,
+14,fruits,fruit,fig,figs,cup,pkg,5.00,pkg,09089,150,,Around 1/2 * 100
+15,fruits,fruit,green grapes,green grapes,cup,pkg,5.00,pkg,09132,151,,
+16,fruits,fruit,guava,guavas,,unit,4.00,lb,09139,55,,
+17,fruits,fruit,honeydew,honeydews,cup,unit,3.00,lb,09184,170,,
+18,fruits,fruit,kiwi,kiwis,,unit,1.00,each,09148,69,,
+19,fruits,fruit,mango,mangos,cup,unit,4.00,each,09176,165,,
+20,fruits,fruit,nectarine,nectarines,,unit,3.00,lb,09191,142,,
+21,fruits,fruit,orange,oranges,,unit,2.00,lb,09201,121,,
+22,fruits,fruit,papaya,papayas,cup,unit,2.00,lb,09226,145,,
+23,fruits,fruit,peach,peaches,,unit,3.00,lb,09236,150,,
+24,fruits,fruit,pear,pears,,unit,2.00,lb,09252,178,,
+25,fruits,fruit,pineapple,pineapples,cup,unit,4.00,lb,09266,165,,
+26,fruits,fruit,plum,plums,,unit,3.00,lb,09279,66,,
+27,fruits,fruit,raspberry,raspberries,cup,pkg,5.00,pkg,09302,123,,
+28,fruits,fruit,red grapes,red grapes,cup,pkg,5.00,pkg,09132,151,,
+29,fruits,fruit,strawberry,strawberries,cup,pkg,5.00,pkg,09316,144,,1 cup whole
+30,fruits,fruit,watermelon,watermelons,cup,unit,4.00,lb,09326,152,,1 cup diced
+31,boosts,nuts,almond,almonds,cup,pkg,8.00,pkg,12061,143,,
+32,boosts,nuts,cashew,cashews,cup,pkg,8.00,pkg,12087,140,,Guestimated eq
+33,boosts,nuts,walnut,walnuts,cup,pkg,8.00,pkg,12155,140,,guestimated whole
+34,boosts,seeds,chia seeds,chia seeds,cup,pkg,10.00,pkg,12006,140,,Guestimated eq
+35,boosts,seeds,flax seeds,flax seeds,cup,pkg,8.00,pkg,12220,168,,
+36,boosts,seeds,hemp seeds,hemp seeds,cup,pkg,8.00,pkg,null,,,
+37,boosts,seeds,pumpkin seeds,pumpkin seeds,cup,pkg,8.00,pkg,12014,129,,
+38,boosts,seeds,sesame seeds,sesame seeds,cup,pkg,8.00,pkg,12023,144,,
+39,boosts,seeds,sunflower seeds,sunflower seeds,cup,pkg,8.00,pkg,12036,140,,
+40,boosts,supers,goji berries,goji berries,cup,pkg,8.00,pkg,null,,,
+41,boosts,supers,açaí berries,açaí berries,cup,pkg,8.00,pkg,null,,,
+42,beverage,juice,lemon,lemon,,unit,0.75,each,09152,,,
+43,boosts,root,maca powder,maca powder,tsp,pkg,10.00,pkg,null,,,
+44,greens,green,cucumber,cucumbers,,unit,1.00,each,11206,158,,
+45,greens,green,mint,mint,leaf,bunch,2.00,bunch,02064,0.05,,
+46,greens,green,butterhead lettuce,butterhead lettuce,cup,unit,2.00,each,11250,55,,

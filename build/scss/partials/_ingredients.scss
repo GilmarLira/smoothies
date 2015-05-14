@@ -41,6 +41,44 @@
     height: lines(2);
   }
 
+  .nutrients { @include rhythm(0); }
+
+
+
+
+  .nutrition { height: lines(5); }
+
+  .nutrient {
+    float: left;
+    height: lines(2);
+  }
+
+  .base-bar {
+    @include linear-gradient(left, $color-pink, $color-orange);
+    @include margins(0, .5);
+    height: lines(.5);
+  }
+
+  .nutrient-bar {
+    @include margins(0, .5);
+    height: lines(.5);
+
+    &.water { background: $color-blue; }
+    &.proteins { background: $color-orange; }
+    &.carbs { background: $color-pink; }
+    &.vitamins-and-minerals { background: $color-green; }
+  }
+
+
+
+
+
+  .nutrient-label {
+    // @include span-columns(2 of 8);
+    display: none;
+  }
+
+
   // .cell.not-combo { display: none; }
 
 }

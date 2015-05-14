@@ -5,7 +5,8 @@
 var recipes = [],
 	ingredients = [],
 	favorites,
-	filter;
+	filter,
+	nutrients = [];
 
 var dur = 800;
 
@@ -29,14 +30,10 @@ function init() {
 	d3.csv("data/ingredients-list.csv", function(csv) {
 		csv.forEach(function(d) {
 			d.ingredient_id = +d.ingredient_id;
+			d.eq = +d.eq;
 		});
 
 		csv.sort(function(a, b) { return d3.descending(a.group, b.group); });
-
-		// ingredients = d3.nest()
-		// 	.key(function(d) { return +d.ingredient_id; })
-		// 	.entries(csv);
-
 		ingredients = csv;
 
 		d3.csv("data/recipe_ingredients-list.csv", function(csv) {
@@ -48,10 +45,93 @@ function init() {
 				rec.ingredients.push(d);
 			});
 		});
+
+		d3.csv("data/usda-chart.csv", function(csv) {
+			// nutrients = csv;
+
+			ingredients.forEach(function(ing) {
+				var water = 0,
+						proteins = 0,
+						carbs = 0,
+						vit_min = 0,
+						summary = [];
+
+				water			= +csv[1][ing.ingredient_id];
+				// calories	= +nutrients[2][ing.ingredient_id];
+				proteins	= +csv[3][ing.ingredient_id];
+				// lipids 		= +nutrients[4][ing.ingredient_id];
+				carbs 		= +csv[5][ing.ingredient_id];
+
+				vit_min		+= +csv[9][ing.ingredient_id] / 1000;   // Calcium (mg)
+				vit_min		+= +csv[10][ing.ingredient_id] / 1000;  // Iron (mg);
+				vit_min		+= +csv[11][ing.ingredient_id] / 1000;  // Magnesium (mg)
+				vit_min		+= +csv[12][ing.ingredient_id] / 1000;  // Phosphorus (mg)
+				vit_min		+= +csv[13][ing.ingredient_id] / 1000;  // Potassium (mg)
+				vit_min		+= +csv[14][ing.ingredient_id] / 1000;  // Sodium (mg)
+				vit_min		+= +csv[15][ing.ingredient_id] / 1000;  // Zinc (mg)
+
+				vit_min		+= +csv[17][ing.ingredient_id] / 1000;  // Vitamin C (mg)
+				vit_min		+= +csv[26][ing.ingredient_id] / 1000;  // Vitamin E (mg);
+
+				summary.push(water);
+				// summary.push(calories);
+				summary.push(proteins);
+				// summary.push(lipids);
+				summary.push(carbs);
+				summary.push(vit_min);
+
+				ing.nutrients = summary;
+			});
+
+			recipes.forEach(function(rec) {
+				var combined_nutrients = [0, 0, 0, 0];
+				console.log("recipe " + rec.recipe_id);
+
+				rec.ingredients.forEach(function(rec_ing, i) {
+					if(rec_ing.ingredient_id) {
+						var ing_obj = find_ingredient_id(rec_ing.ingredient_id);
+						rec.masses = get_recipe_masses(rec.recipe_id);
+
+						// console.log("    Ingredient " + i + ": " + ing_obj.name);
+						var i_mass 		= rec.masses[i];
+						combined_nutrients[0] += Math.round(i_mass / 100 * ing_obj.nutrients[0]);
+						combined_nutrients[1] += Math.round(i_mass / 100 * ing_obj.nutrients[1]);
+						combined_nutrients[2] += Math.round(i_mass / 100 * ing_obj.nutrients[2]);
+						combined_nutrients[3] += Math.round(i_mass / 100 * ing_obj.nutrients[3]);
+
+						// ing_obj.nutrients.forEach(function(n) {
+						// 	combined_nutrients[i] += Math.round(i_mass / 100 + n);
+						// });
+					}
+				});
+				console.log(combined_nutrients);
+				console.log("=============================");
+				rec.nutrients = combined_nutrients;
+			});
+		});
 	});
 
 	list_menu();
 }
+
+
+function get_recipe_masses(r_id) {
+	var rec = find_recipe_id(r_id);
+	var mass = [];
+	rec.ingredients.forEach(function(d, i) {
+
+		var portions = d.quantity_decimal;
+		var portion_mass = find_ingredient_id(d.ingredient_id).eq;
+		var ing_mass = portions * portion_mass;
+
+		mass.push(ing_mass);
+	});
+
+	return mass;
+}
+
+
+
 
 
 function list_menu() {
@@ -128,7 +208,8 @@ function list_recipes(list) {
 	var recipe_enter = recipe_list.enter()
 		.append("div")
 			.attr("class", "cell recipe enter")
-			.attr("data-recipe-id", function(d) { return d.recipe_id; });
+			.attr("data-recipe-id", function(d) { return d.recipe_id; })
+			.call(scroll_top);
 
 	var recipe_header = recipe_enter
 		.append("div")
@@ -165,6 +246,21 @@ function list_recipes(list) {
 			.attr("class", "ingredients")
 			.call(list_recipe_ingredients);
 
+	var recipe_nutrition = recipe_body
+		.append("div")
+			.attr("class", "nutrition");
+
+	recipe_nutrition
+			.append("div")
+				.attr("class", "base-bar")
+				.style("width", function(d) {
+					return get_recipe_total_mass(d) + "px";
+				});
+
+	recipe_nutrition
+		.call(list_recipe_nutrients);
+
+
 
 	// UPDATE
 	recipe_list
@@ -174,8 +270,15 @@ function list_recipes(list) {
 		.classed("favorite", function(d) { return (favorites.hasRecipe(d.recipe_id)); })
 		.transition()
 			.call(enter_transition);
-
 }
+
+
+// function list_recipe_nutrients(selection) {
+// 	selection
+// 		.each(function(d, i) {
+//
+// 		});
+// }
 
 
 function list_recipe_ingredients(selection) {
@@ -203,9 +306,69 @@ function list_recipe_ingredients(selection) {
 					var ing_obj = find_ingredient_id(a.ingredient_id);
 					return (a.ingredient_id === 0) ? "Add " + ing_obj.name : ing_obj.name;
 				});
+
+			ing_enter
+				.append("span")
+				.attr("class", "nutrients") // todo: get ingredient group
+				.text(function(a, i) {
+					if(a.ingredient_id) {
+						var ing_obj = find_ingredient_id(a.ingredient_id);
+						if (ing_obj.nutrients.length) {
+							var i_mass 		= d.masses[i];
+							var i_water 	= Math.round(i_mass / 100 * ing_obj.nutrients[0]);
+							var i_protein = Math.round(i_mass / 100 * ing_obj.nutrients[1]);
+							// var i_fat 		= Math.round(i_mass / 100 * ing_obj.nutrients[3]);
+							var i_carbs 	= Math.round(i_mass / 100 * ing_obj.nutrients[2]);
+
+							return " (" + i_mass + "g, " + i_water + "g water, " + i_protein  + "g protein, " + i_carbs + "g carbs)";
+						}
+					}
+				});
 		});
 }
 
+
+function list_recipe_nutrients(selection) {
+	selection
+		.each(function(d, i) {
+			var bar_graph = d3.select(this).selectAll(".nutrient-bar").data(d.nutrients);
+			var nutrient_label = ["water", "proteins", "carbs", "vitamins-and-minerals"];
+
+			var nutrient_enter = bar_graph.enter()
+				.append("div")
+					.classed("nutrient", true);
+					// .style("width", function(d) { return d + "px"; });
+
+			// nutrient_enter
+			// 	.append("div")
+			// 		.attr("class", "nutrient-bar")
+			// 		.style("width", get_recipe_total_mass(d) + "px");
+
+
+			nutrient_enter
+				.append("div")
+					.attr("class", function(d, i) { return nutrient_label[i]; })
+					.classed("nutrient-bar", true)
+					.style("width", function(d) { return d + "px"; });
+
+			nutrient_enter
+				.append("div")
+					.attr("class", "nutrient-label")
+					.text(function(d, i) { return d +  " " + nutrient_label[i]; });
+
+		});
+}
+
+
+function get_recipe_total_mass(recipe) {
+	var total_mass = 0;
+
+	recipe.masses.forEach(function(d) {
+		total_mass += d;
+	});
+
+	return total_mass;
+}
 
 
 function list_ingredients() {
@@ -327,10 +490,10 @@ function toggle_recipe(r, i) {
 
 	if($cel.is(".selected")) {
 		height = lines(2);
-		top = "-=" + lines(11);
+		top = "-=" + lines(16);
 	} else {
-		height = lines(12);
-		top = "+=" + lines(11);
+		height = lines(17);
+		top = "+=" + lines(16);
 	}
 
 	$cel
@@ -411,6 +574,13 @@ function update_ingredient_list_view() {
 	// 				return (!filter.hasComboIngredient(e.ingredient_id));
 	// 			});
 	// 	});
+}
+
+
+function scroll_top() {
+	$("body").animate({
+		scrollTop: 0
+	}, dur);
 }
 
 
